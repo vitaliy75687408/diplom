@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}StyleAI — Підбір зачіски за допомогою AI{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#f5f3ff', 100: '#ede9fe', 200: '#ddd6fe', 300: '#c4b5fd', 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9', 800: '#5b21b6', 900: '#4c1d95' },
+                        sokyra: {
+                            dark: '#0c0c0c',
+                            darker: '#080808',
+                            card: '#141414',
+                            border: '#262626',
+                            gold: '#c9a227',
+                            goldLight: '#e5c84a',
+                            muted: '#737373',
+                            light: '#e5e5e5'
+                        }
+                    },
+                    fontFamily: {
+                        heading: ['Cormorant Garamond', 'Georgia', 'serif'],
+                        sans: ['Manrope', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+    <style>
+        * { -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Manrope', system-ui, sans-serif; background: #0c0c0c; color: #e5e5e5; min-height: 100vh; }
+        .page-bg { background: #0c0c0c; min-height: 100vh; }
+        .nav-bar { background: rgba(12,12,12,0.95); border-bottom: 1px solid #262626; backdrop-filter: blur(8px); }
+        .btn-sokyra { background: #c9a227; color: #0c0c0c; font-weight: 600; transition: background 0.2s, transform 0.2s; }
+        .btn-sokyra:hover { background: #e5c84a; transform: translateY(-1px); }
+        .btn-outline-sokyra { border: 2px solid #c9a227; color: #c9a227; background: transparent; font-weight: 600; transition: all 0.2s; }
+        .btn-outline-sokyra:hover { background: #c9a227; color: #0c0c0c; }
+        .font-heading { font-family: 'Cormorant Garamond', Georgia, serif; }
+        .section-title { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; letter-spacing: 0.02em; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="page-bg antialiased">
+    <div class="flex flex-col min-h-screen">
+        <nav class="nav-bar sticky top-0 z-50">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <a href="{% url 'index' %}" class="flex items-center gap-2.5 text-white font-heading font-semibold text-2xl leading-none">
+                        <span class="w-9 h-9 rounded-lg bg-sokyra-gold flex items-center justify-center text-sokyra-dark text-base font-bold mb-0.5">S</span>
+                        <span>StyleAI</span>
+                    </a>
+                    <!-- Вибір міста -->
+                    <div class="relative" id="cityDropdownWrapper">
+                        <button type="button" id="cityDropdownBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-sokyra-border bg-sokyra-card text-sokyra-light text-sm hover:border-sokyra-gold/50 transition-colors">
+                            <i class="fas fa-map-marker-alt text-sokyra-gold text-xs"></i>
+                            <span id="cityDropdownLabel">{{ selected_city|default:"Усі міста" }}</span>
+                            <i class="fas fa-chevron-down text-xs text-sokyra-muted ml-1"></i>
+                        </button>
+                        <div id="cityDropdownMenu" class="hidden absolute left-0 top-full mt-1 w-48 rounded-xl bg-sokyra-card border border-sokyra-border shadow-2xl z-50 py-1 max-h-64 overflow-y-auto">
+                            <button type="button" class="city-option w-full text-left px-4 py-2 text-sm text-sokyra-light hover:bg-sokyra-gold/10 hover:text-sokyra-gold transition-colors {% if not selected_city %}text-sokyra-gold font-semibold{% endif %}" data-city="">Усі міста</button>
+                            {% for city in available_cities %}
+                            <button type="button" class="city-option w-full text-left px-4 py-2 text-sm text-sokyra-light hover:bg-sokyra-gold/10 hover:text-sokyra-gold transition-colors {% if selected_city == city %}text-sokyra-gold font-semibold{% endif %}" data-city="{{ city }}">{{ city }}</button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <ul class="hidden md:flex items-center gap-8">
+                    <li><a href="{% url 'index' %}" class="text-sokyra-light hover:text-sokyra-gold transition-colors font-medium">Головна</a></li>
+                    <li><a href="{% url 'hairstyle_selection' %}" class="text-sokyra-light hover:text-sokyra-gold transition-colors font-medium">Підбір зачіски</a></li>
+                    <li><a href="{% url 'generate_hairstyle' %}" class="text-sokyra-light hover:text-sokyra-gold transition-colors font-medium">Генерація зачіски</a></li>
+                    <li><a href="{% url 'find_master' %}" class="text-sokyra-light hover:text-sokyra-gold transition-colors font-medium">Майстри</a></li>
+                    <li><a href="{% url 'about' %}" class="text-sokyra-light hover:text-sokyra-gold transition-colors font-medium">Про нас</a></li>
+                </ul>
+                <div class="flex items-center gap-3">
+                    <a href="{% url 'hairstyle_selection' %}" class="btn-sokyra hidden md:inline-flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm transition-all hover:shadow-[0_0_15px_rgba(201,162,39,0.3)]">Підібрати</a>
+                    <button type="button" class="md:hidden p-2 rounded-lg text-sokyra-light hover:bg-white/10" id="menuBtn" aria-label="Меню"><i class="fas fa-bars text-lg"></i></button>
+                </div>
+            </div>
+
+            <div id="mobileMenu" class="hidden md:hidden border-t border-sokyra-border bg-sokyra-darker px-4 py-4 space-y-2">
+                <a href="{% url 'index' %}" class="block py-2 text-sokyra-light">Головна</a>
+                <a href="{% url 'hairstyle_selection' %}" class="block py-2 text-sokyra-light">Підбір зачіски</a>
+                <a href="{% url 'generate_hairstyle' %}" class="block py-2 text-sokyra-light">Генерація зачіски</a>
+                <a href="{% url 'survey' %}" class="block py-2 text-sokyra-light">Опитування</a>
+                <a href="{% url 'find_master' %}" class="block py-2 text-sokyra-light">Майстри</a>
+                <a href="{% url 'about' %}" class="block py-2 text-sokyra-light">Про нас</a>
+                <a href="{% url 'hairstyle_selection' %}" class="btn-sokyra inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm mt-2">Підібрати</a>
+            </div>
+        </nav>
+
+        <main class="flex-1">
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="bg-sokyra-darker border-t border-sokyra-border mt-auto">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16">
+                    <div>
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="w-8 h-8 rounded-lg bg-sokyra-gold flex items-center justify-center text-sokyra-dark text-xs font-bold">S</span>
+                            <span class="text-white font-heading font-semibold text-lg">StyleAI</span>
+                        </div>
+                        <p class="text-sokyra-muted text-sm leading-relaxed mb-6">Платформа для підбору зачіски та пошуку професійних майстрів. Знайди свій стиль.</p>
+                        <div class="flex gap-3">
+                            <a href="#" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-sokyra-gold hover:text-sokyra-dark transition-colors"><i class="fab fa-facebook-f text-sm"></i></a>
+                            <a href="#" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-sokyra-gold hover:text-sokyra-dark transition-colors"><i class="fab fa-instagram text-sm"></i></a>
+                            <a href="#" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-sokyra-gold hover:text-sokyra-dark transition-colors"><i class="fab fa-telegram-plane text-sm"></i></a>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-semibold mb-4 section-title text-lg">Сервіс</h4>
+                        <ul class="space-y-3">
+                            <li><a href="{% url 'hairstyle_selection' %}" class="text-sokyra-muted hover:text-sokyra-gold transition-colors text-sm">АІ підбір зачіски</a></li>
+                            <li><a href="{% url 'generate_hairstyle' %}" class="text-sokyra-muted hover:text-sokyra-gold transition-colors text-sm">Генерація зачіски на фото</a></li>
+                            <li><a href="{% url 'find_master' %}" class="text-sokyra-muted hover:text-sokyra-gold transition-colors text-sm">Пошук майстрів</a></li>
+                            <li><a href="{% url 'survey' %}" class="text-sokyra-muted hover:text-sokyra-gold transition-colors text-sm">Опитування</a></li>
+                            <li><a href="{% url 'about' %}" class="text-sokyra-muted hover:text-sokyra-gold transition-colors text-sm">Про нас</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-semibold mb-4 section-title text-lg">Контакти</h4>
+                        <ul class="space-y-3 text-sokyra-muted text-sm">
+                            <li class="flex items-center gap-2"><i class="fas fa-envelope text-sokyra-gold w-4"></i> styleai@example.com</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-phone text-sokyra-gold w-4"></i> +38 (XXX) XXX XX XX</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="border-t border-sokyra-border mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <p class="text-sokyra-muted text-sm">© 2026 StyleAI. Усі права захищено.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Модальне вікно запису до майстра -->
+    <div id="bookingModal" class="fixed inset-0 z-[100] hidden" aria-modal="true" role="dialog" aria-labelledby="bookingModalTitle">
+        <div class="absolute inset-0 bg-black/70" id="bookingModalBackdrop"></div>
+        <div class="relative min-h-full flex items-center justify-center p-4 overflow-y-auto">
+            <div class="relative w-full max-w-lg rounded-2xl bg-sokyra-card border border-sokyra-border shadow-2xl max-h-[90vh] overflow-y-auto" id="bookingModalContent">
+                <div class="sticky top-0 z-10 flex items-center justify-between p-4 border-b border-sokyra-border bg-sokyra-card rounded-t-2xl">
+                    <h2 id="bookingModalTitle" class="text-xl font-semibold text-white">Записатись до майстра</h2>
+                    <button type="button" class="p-2 rounded-lg text-sokyra-muted hover:bg-white/10 hover:text-white transition-colors" id="bookingModalClose" aria-label="Закрити"><i class="fas fa-times text-lg"></i></button>
+                </div>
+                <div class="p-6">
+                    <!-- Крок 1 -->
+                    <div id="modalStep1" class="booking-modal-step">
+                        <p class="text-sokyra-muted text-sm mb-3">Оберіть тип стрижки</p>
+                        <div id="modalStylesList" class="grid grid-cols-2 gap-2"></div>
+                    </div>
+                    <!-- Крок 2 -->
+                    <div id="modalStep2" class="booking-modal-step hidden">
+                        <p class="text-sokyra-muted text-sm mb-3">Оберіть майстра</p>
+                        <div id="modalMastersList" class="space-y-2 max-h-48 overflow-y-auto"></div>
+                    </div>
+                    <!-- Крок 3 -->
+                    <div id="modalStep3" class="booking-modal-step hidden">
+                        <p class="text-sokyra-muted text-sm mb-2">Дата</p>
+                        <div id="modalDatesRow" class="flex gap-2 overflow-x-auto pb-2 mb-4"></div>
+                        <p class="text-sokyra-muted text-sm mb-2">Час</p>
+                        <div id="modalSlotsRow" class="flex flex-wrap gap-2"></div>
+                    </div>
+                    <!-- Крок 4: підсумок, ціна, форма, кнопка Записатись в кінці -->
+                    <div id="modalStep4" class="booking-modal-step hidden">
+                        <div id="modalSummary" class="rounded-xl bg-sokyra-dark border border-sokyra-border p-4 mb-4 text-sm">
+                            <p class="text-sokyra-muted">Майстер: <span id="modalSumMaster" class="text-white"></span></p>
+                            <p class="text-sokyra-muted mt-1">Стрижка: <span id="modalSumStyle" class="text-white"></span></p>
+                            <p class="text-sokyra-muted mt-1">Дата: <span id="modalSumDate" class="text-white"></span>, <span id="modalSumTime" class="text-white"></span></p>
+                            <p class="text-sokyra-gold font-semibold mt-3 text-base">Ціна: <span id="modalSumPrice">—</span></p>
+                        </div>
+                        <form id="modalBookingForm" class="space-y-4">
+                            {% csrf_token %}
+                            <input type="hidden" name="master_id" id="modalFormMasterId">
+                            <input type="hidden" name="hairstyle_id" id="modalFormHairstyleId">
+                            <input type="hidden" name="date" id="modalFormDate">
+                            <input type="hidden" name="time_slot" id="modalFormTimeSlot">
+                            <input type="hidden" name="service_id" id="modalFormServiceId">
+                            <div>
+                                <label for="modalClientName" class="block text-sokyra-muted text-sm mb-1">Ваше ім'я *</label>
+                                <input type="text" name="client_name" id="modalClientName" required class="w-full px-4 py-3 rounded-xl border border-sokyra-border bg-sokyra-dark text-white focus:outline-none focus:border-sokyra-gold" placeholder="Іван">
+                            </div>
+                            <div>
+                                <label for="modalClientPhone" class="block text-sokyra-muted text-sm mb-1">Телефон *</label>
+                                <input type="tel" name="client_phone" id="modalClientPhone" required class="w-full px-4 py-3 rounded-xl border border-sokyra-border bg-sokyra-dark text-white focus:outline-none focus:border-sokyra-gold" placeholder="+38 0XX XXX XX XX">
+                            </div>
+                            <div>
+                                <label for="modalClientChatId" class="block text-sokyra-muted text-sm mb-1">Telegram Chat ID (для підтвердження)</label>
+                                <input type="number" name="client_chat_id" id="modalClientChatId" class="w-full px-4 py-3 rounded-xl border border-sokyra-border bg-sokyra-dark text-white focus:outline-none focus:border-sokyra-gold" placeholder="123456789">
+                                <p class="text-[10px] text-sokyra-muted mt-1">Необов'язково. Щоб дізнатись свій ID, напишіть @userinfobot</p>
+                            </div>
+                            <button type="submit" class="btn-sokyra w-full py-4 rounded-xl font-semibold text-sokyra-dark text-lg">Записатись</button>
+                        </form>
+                        <div id="modalBookingSuccess" class="hidden mt-4 p-4 rounded-xl bg-green-900/30 border border-green-600/50 text-green-200 text-sm">
+                            <p id="modalSuccessMessage"></p>
+                            <button type="button" class="text-sokyra-gold hover:underline mt-2" id="modalCloseAfterSuccess">Закрити</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    window.BOOKING_URLS = {
+        styles: "{% url 'booking_api_styles' %}",
+        masters: "{% url 'booking_api_masters' %}",
+        dates: "{% url 'booking_api_dates' %}",
+        slots: "{% url 'booking_api_slots' %}",
+        create: "{% url 'booking_create' %}"
+    };
+    </script>
+    <script>
+    (function() {
+        var modal = document.getElementById('bookingModal');
+        var backdrop = document.getElementById('bookingModalBackdrop');
+        var closeBtn = document.getElementById('bookingModalClose');
+        var urls = window.BOOKING_URLS || {};
+        var csrf = document.querySelector('[name=csrfmiddlewaretoken]') && document.querySelector('[name=csrfmiddlewaretoken]').value;
+        var state = { styleId: null, styleName: null, masterId: null, masterName: null, masterPrice: null, date: null, timeSlot: null, preMasterId: '', preServiceId: '', preServiceName: '' };
+
+        function openModal(preMasterId, preServiceId, preServiceName) {
+            state.preMasterId = preMasterId || '';
+            state.preServiceId = preServiceId || '';
+            state.preServiceName = preServiceName || '';
+            state.styleId = state.styleName = state.masterId = state.masterName = state.masterPrice = state.date = state.timeSlot = null;
+            
+            document.getElementById('modalFormServiceId').value = state.preServiceId;
+            
+            var titleEl = document.getElementById('bookingModalTitle');
+            if (state.preServiceName) {
+                titleEl.textContent = 'Записатись на ' + state.preServiceName.toLowerCase();
+            } else {
+                titleEl.textContent = 'Записатись до майстра';
+            }
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            // IF SERVICE IS SELECTED, SKIP STEPS 1 & 2
+            if (state.preServiceId && state.preMasterId) {
+                state.masterId = state.preMasterId;
+                // Fetch master info for summary
+                fetch(urls.masters + '?master_id=' + encodeURIComponent(state.masterId)).then(function(r) { return r.json(); }).then(function(d) {
+                    if (d.masters && d.masters.length) {
+                        state.masterName = d.masters[0].name;
+                        state.masterPrice = d.masters[0].price || '';
+                    }
+                });
+                showModalStep(3);
+                loadDatesForMaster(state.masterId);
+                return;
+            }
+
+            showModalStep(1);
+            document.getElementById('modalStep4').querySelector('form').classList.remove('hidden');
+            document.getElementById('modalBookingSuccess').classList.add('hidden');
+            document.getElementById('modalStylesList').innerHTML = '<span class="text-sokyra-muted col-span-2">Завантаження...</span>';
+            var stylesUrl = urls.styles;
+            if (state.preMasterId) { stylesUrl = urls.styles + '?master_id=' + encodeURIComponent(state.preMasterId); }
+            fetch(stylesUrl).then(function(r) { return r.json(); }).then(function(d) {
+                var list = document.getElementById('modalStylesList');
+                if (!d.styles || !d.styles.length) { list.innerHTML = '<span class="text-sokyra-muted">Немає зачісок.</span>'; return; }
+                list.innerHTML = d.styles.map(function(s) {
+                    return '<button type="button" class="modal-style-btn rounded-xl border border-sokyra-border bg-sokyra-dark py-2.5 px-3 text-white text-sm hover:border-sokyra-gold/50" data-id="' + s.id + '" data-name="' + (s.name || '') + '">' + (s.name || '') + '</button>';
+                }).join('');
+                list.querySelectorAll('.modal-style-btn').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.modal-style-btn').forEach(function(b) { b.classList.remove('border-sokyra-gold', 'bg-sokyra-gold/20'); });
+                        btn.classList.add('border-sokyra-gold', 'bg-sokyra-gold/20');
+                        state.styleId = btn.dataset.id;
+                        state.styleName = btn.dataset.name;
+                        
+                        if (state.preMasterId) {
+                            state.masterId = state.preMasterId;
+                            fetch(urls.masters + '?master_id=' + encodeURIComponent(state.masterId)).then(function(r) { return r.json(); }).then(function(d) {
+                                if (d.masters && d.masters.length) {
+                                    state.masterName = d.masters[0].name;
+                                    state.masterPrice = d.masters[0].price || '';
+                                }
+                            });
+                            showModalStep(3);
+                            loadDatesForMaster(state.masterId);
+                            return;
+                        }
+
+                        document.getElementById('modalMastersList').innerHTML = '<span class="text-sokyra-muted">Завантаження...</span>';
+                        fetch(urls.masters + '?style_id=' + encodeURIComponent(state.styleId)).then(function(r) { return r.json(); }).then(function(data) {
+                            var ml = document.getElementById('modalMastersList');
+                            if (!data.masters || !data.masters.length) {
+                                ml.innerHTML = '<span class="text-sokyra-muted">Майстрів з цією стрижкою не знайдено. Оберіть інший тип.</span>';
+                                showModalStep(2);
+                                return;
+                            }
+                            ml.innerHTML = data.masters.map(function(m) {
+                                var priceStr = m.price ? m.price + ' грн' : 'за домовленістю';
+                                var sel = state.preMasterId && m.id == state.preMasterId ? ' border-sokyra-gold bg-sokyra-gold/20' : '';
+                                return '<button type="button" class="modal-master-btn w-full rounded-xl border border-sokyra-border bg-sokyra-dark p-3 text-left text-white text-sm hover:border-sokyra-gold/50' + sel + '" data-id="' + m.id + '" data-name="' + (m.name||'') + '" data-price="' + (m.price||'') + '"><span class="font-semibold">' + (m.name||'') + '</span><span class="text-sokyra-gold block text-xs">' + priceStr + '</span></button>';
+                            }).join('');
+                            showModalStep(2);
+                            ml.querySelectorAll('.modal-master-btn').forEach(function(b) {
+                                b.addEventListener('click', function() {
+                                    document.querySelectorAll('.modal-master-btn').forEach(function(x) { x.classList.remove('border-sokyra-gold', 'bg-sokyra-gold/20'); });
+                                    this.classList.add('border-sokyra-gold', 'bg-sokyra-gold/20');
+                                    state.masterId = this.dataset.id;
+                                    state.masterName = this.dataset.name;
+                                    state.masterPrice = this.dataset.price || '';
+                                    showModalStep(3);
+                                    loadDatesForMaster(state.masterId);
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+        function loadDatesForMaster(mid) {
+            fetch(urls.dates + '?master_id=' + encodeURIComponent(mid)).then(function(r) { return r.json(); }).then(function(d) {
+                var dr = document.getElementById('modalDatesRow');
+                dr.innerHTML = (d.dates || []).map(function(dateStr) {
+                    var d = new Date(dateStr);
+                    var label = d.toLocaleDateString('uk-UA', { day: 'numeric', month: 'short' });
+                    return '<button type="button" class="modal-date-btn flex-shrink-0 px-3 py-2 rounded-lg border border-sokyra-border bg-sokyra-dark text-white text-sm hover:border-sokyra-gold/50" data-date="' + dateStr + '">' + label + '</button>';
+                }).join('');
+                document.getElementById('modalSlotsRow').innerHTML = '<span class="text-sokyra-muted text-sm">Оберіть дату.</span>';
+                dr.querySelectorAll('.modal-date-btn').forEach(function(b) {
+                    b.addEventListener('click', function() {
+                        document.querySelectorAll('.modal-date-btn').forEach(function(x) { x.classList.remove('border-sokyra-gold', 'bg-sokyra-gold/20'); });
+                        this.classList.add('border-sokyra-gold', 'bg-sokyra-gold/20');
+                        state.date = this.dataset.date;
+                        fetch(urls.slots + '?master_id=' + encodeURIComponent(state.masterId) + '&date=' + encodeURIComponent(state.date)).then(function(r) { return r.json(); }).then(function(sd) {
+                            var sr = document.getElementById('modalSlotsRow');
+                            if (!sd.slots || !sd.slots.length) { sr.innerHTML = '<span class="text-sokyra-muted">Немає вільних слотів.</span>'; return; }
+                            sr.innerHTML = sd.slots.map(function(s) {
+                                return '<button type="button" class="modal-slot-btn px-3 py-2 rounded-lg border border-sokyra-border bg-sokyra-dark text-white text-sm hover:border-sokyra-gold/50" data-slot="' + s + '">' + s + '</button>';
+                            }).join('');
+                            sr.querySelectorAll('.modal-slot-btn').forEach(function(b) {
+                                b.addEventListener('click', function() {
+                                    document.querySelectorAll('.modal-slot-btn').forEach(function(x) { x.classList.remove('border-sokyra-gold', 'bg-sokyra-gold/20'); });
+                                    this.classList.add('border-sokyra-gold', 'bg-sokyra-gold/20');
+                                    state.timeSlot = this.dataset.slot;
+                                    showSummaryStep();
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+        function showSummaryStep() {
+            showModalStep(4);
+            var d = new Date(state.date);
+            document.getElementById('modalSumMaster').textContent = state.masterName || '';
+            document.getElementById('modalSumStyle').parentElement.querySelector('span:first-child').textContent = state.preServiceName ? 'Послуга:' : 'Стрижка:';
+            document.getElementById('modalSumStyle').textContent = state.preServiceName || state.styleName || '';
+            document.getElementById('modalSumDate').textContent = d.toLocaleDateString('uk-UA');
+            document.getElementById('modalSumTime').textContent = state.timeSlot || '';
+            document.getElementById('modalSumPrice').textContent = state.masterPrice ? state.masterPrice + ' грн' : 'за домовленістю';
+            document.getElementById('modalFormMasterId').value = state.masterId || '';
+            document.getElementById('modalFormHairstyleId').value = state.styleId || '';
+            document.getElementById('modalFormDate').value = state.date || '';
+            document.getElementById('modalFormTimeSlot').value = state.timeSlot || '';
+        }
+
+        function showModalStep(n) {
+            [1,2,3,4].forEach(function(i) {
+                var el = document.getElementById('modalStep' + i);
+                if (el) el.classList.toggle('hidden', i !== n);
+            });
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        if (backdrop) backdrop.addEventListener('click', closeModal);
+        if (closeBtn) closeBtn.addEventListener('click', closeModal);
+        document.getElementById('modalCloseAfterSuccess') && document.getElementById('modalCloseAfterSuccess').addEventListener('click', closeModal);
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) closeModal(); });
+
+        document.addEventListener('click', function(e) {
+            var t = e.target.closest && e.target.closest('.js-booking-open');
+            if (t) {
+                e.preventDefault();
+                openModal(t.getAttribute('data-master-id') || '', t.getAttribute('data-service-id') || '', t.getAttribute('data-service-name') || '');
+            }
+        });
+
+        document.getElementById('modalBookingForm') && document.getElementById('modalBookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var form = e.target;
+            var fd = new FormData(form);
+            if (csrf) fd.append('csrfmiddlewaretoken', csrf);
+            fetch(urls.create, { method: 'POST', body: fd, headers: csrf ? { 'X-CSRFToken': csrf } : {} })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        form.classList.add('hidden');
+                        document.getElementById('modalBookingSuccess').classList.remove('hidden');
+                        document.getElementById('modalSuccessMessage').textContent = data.message || 'Запис створено.';
+                    } else {
+                        alert(data.error || 'Помилка запису');
+                    }
+                })
+                .catch(function() { alert('Помилка мережі'); });
+        });
+    })();
+    </script>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 500, once: true, offset: 60 });
+        document.getElementById('menuBtn')?.addEventListener('click', function() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        });
+
+        // City dropdown
+        (function() {
+            var btn = document.getElementById('cityDropdownBtn');
+            var menu = document.getElementById('cityDropdownMenu');
+            var label = document.getElementById('cityDropdownLabel');
+            if (!btn || !menu) return;
+            btn.addEventListener('click', function(e) { e.stopPropagation(); menu.classList.toggle('hidden'); });
+            document.addEventListener('click', function() { menu.classList.add('hidden'); });
+            menu.addEventListener('click', function(e) { e.stopPropagation(); });
+            menu.querySelectorAll('.city-option').forEach(function(opt) {
+                opt.addEventListener('click', function() {
+                    var city = this.dataset.city || '';
+                    label.textContent = city || 'Усі міста';
+                    menu.classList.add('hidden');
+                    var csrf = document.querySelector('[name=csrfmiddlewaretoken]');
+                    var fd = new FormData();
+                    fd.append('city', city);
+                    fetch('{% url "set_city" %}', { method: 'POST', body: fd, headers: csrf ? { 'X-CSRFToken': csrf.value } : {} })
+                        .then(function() { location.reload(); });
+                });
+            });
+        })();
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

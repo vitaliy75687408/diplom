@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
+    <div class="text-center mb-10" data-aos="fade-up">
+        <h1 class="text-3xl sm:text-4xl font-semibold text-white mb-3">Підбір зачіски за допомогою AI</h1>
+        <p class="text-sokyra-muted text-lg">Завантаж фото — отримай персональні рекомендації</p>
+        <p class="text-sokyra-muted text-sm mt-4">Пройшли опитування? Результати врахуються. Просто завантаж фото нижче.</p>
+        <p class="text-sokyra-muted text-sm mt-2">
+            <a href="{% url 'generate_hairstyle' %}" class="text-sokyra-gold hover:underline">Згенерувати своє фото з новою зачіскою</a> — AI накладе обрану зачіску на ваше обличчя.
+        </p>
+    </div>
+
+    {% csrf_token %}
+    <div id="uploadBox" data-aos="fade-up" class="rounded-2xl bg-sokyra-card border border-sokyra-border overflow-hidden shadow-xl hover:border-sokyra-gold/40 transition-colors">
+        <div class="p-8 sm:p-10 cursor-pointer" onclick="document.getElementById('photoInput').click()">
+            <input type="file" id="photoInput" accept="image/*" class="hidden">
+            <div id="uploadContent">
+                <div class="upload-zone aspect-[4/3] max-h-80 rounded-xl border-2 border-dashed border-sokyra-border bg-sokyra-darker/50 flex flex-col items-center justify-center gap-4 mx-auto overflow-hidden hover:border-sokyra-gold/60 hover:bg-sokyra-darker/70 transition-colors">
+                    <div class="w-16 h-16 rounded-2xl bg-sokyra-gold/15 flex items-center justify-center text-sokyra-gold">
+                        <i class="fas fa-camera-retro text-2xl"></i>
+                    </div>
+                    <div class="text-center px-4">
+                        <p class="text-white font-medium text-lg">Завантажте фото обличчя</p>
+                        <p class="text-sokyra-muted text-sm mt-1">JPG, PNG · добре освітлене, анфас</p>
+                    </div>
+                    <p class="text-sokyra-gold/90 text-sm font-medium">Перетягніть сюди або натисніть для вибору</p>
+                </div>
+                <div class="mt-6 flex justify-center">
+                    <span class="btn-sokyra inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-sokyra-dark pointer-events-none" tabindex="-1">
+                        <i class="fas fa-wand-magic-sparkles text-sm"></i> Підбрати зачіску
+                    </span>
+                </div>
+            </div>
+            <div id="uploadPreview" class="hidden h-full flex flex-col items-center justify-center p-6 bg-sokyra-dark/80 backdrop-blur-sm rounded-2xl relative">
+                <img id="previewImage" src="" alt="Ваше фото" class="max-h-64 rounded-xl shadow-lg mb-6 border-2 border-sokyra-gold/30 object-contain">
+                
+                <div class="w-full max-w-sm mb-6">
+                    <label class="block text-white font-medium mb-2 text-center">Оберіть вашу стать (для точного підбору)</label>
+                    <div class="flex gap-4">
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="manual_gender" value="men" class="peer sr-only" checked>
+                            <div class="text-center py-3 rounded-xl border border-sokyra-border bg-sokyra-card text-sokyra-muted peer-checked:bg-sokyra-gold peer-checked:text-sokyra-dark peer-checked:border-sokyra-gold peer-checked:font-bold transition-all">
+                                Чоловік
+                            </div>
+                        </label>
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="manual_gender" value="women" class="peer sr-only">
+                            <div class="text-center py-3 rounded-xl border border-sokyra-border bg-sokyra-card text-sokyra-muted peer-checked:bg-sokyra-gold peer-checked:text-sokyra-dark peer-checked:border-sokyra-gold peer-checked:font-bold transition-all">
+                                Жінка
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="button" id="analyzeBtn" class="btn-sokyra w-full max-w-sm py-4 rounded-xl font-bold text-sokyra-dark text-lg shadow-lg shadow-sokyra-gold/20 flex items-center justify-center gap-3">
+                        <i class="fas fa-wand-magic-sparkles text-sm"></i> Підбрати зачіску
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="loadingSection" class="hidden text-center py-16" data-aos="fade-up">
+        <div class="inline-flex gap-1.5 mb-4">
+            <span class="w-2.5 h-2.5 rounded-full bg-sokyra-gold animate-pulse"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-sokyra-gold animate-pulse" style="animation-delay: 0.2s"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-sokyra-gold animate-pulse" style="animation-delay: 0.4s"></span>
+        </div>
+        <p class="text-white font-medium">AI аналізує фото та генерує ваш портрет з зачісками</p>
+        <p class="text-sokyra-muted text-sm mt-1">Це може зайняти до 1–2 хвилин. Обличчя залишається вашим, змінюється лише зачіска.</p>
+    </div>
+
+    <div id="resultsSection" class="hidden pt-8">
+        <h2 class="section-title text-2xl text-white mb-2" data-aos="fade-up">Рекомендовані зачіски</h2>
+        <p id="faceShapeText" class="text-sokyra-muted mb-2 hidden">AI визначив форму обличчя: <strong id="faceShapeName" class="text-sokyra-gold"></strong>. Під неї підходять такі типи стрижок:</p>
+        <p id="surveyUsedText" class="text-sokyra-gold/90 text-sm mb-6 hidden"><i class="fas fa-clipboard-check mr-1"></i> Враховано ваші відповіді з опитування.</p>
+        <div id="recommendationsGrid" class="grid sm:grid-cols-2 gap-6 pb-20">
+        </div>
+    </div>
+</div>
+
+<!-- Lightbox Modal -->
+<div id="imageModal" class="hidden fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+    <button id="closeModal" class="absolute top-6 right-6 text-white text-3xl hover:text-sokyra-gold transition-colors">
+        <i class="fas fa-times"></i>
+    </button>
+    <img id="modalImg" src="" alt="Full view" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl scale-95 transition-transform duration-300">
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var photoInput = document.getElementById('photoInput');
+    var uploadBox = document.getElementById('uploadBox');
+    var uploadPreview = document.getElementById('uploadPreview');
+    var uploadContent = document.getElementById('uploadContent');
+    var previewImage = document.getElementById('previewImage');
+    var analyzeBtn = document.getElementById('analyzeBtn');
+    var loadingSection = document.getElementById('loadingSection');
+    var resultsSection = document.getElementById('resultsSection');
+    var recommendationsGrid = document.getElementById('recommendationsGrid');
+
+    var uploadZone = document.querySelector('.upload-zone');
+    uploadBox.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        if (uploadContent.classList.contains('hidden')) return;
+        if (uploadZone) uploadZone.classList.add('border-sokyra-gold', 'bg-sokyra-gold/10');
+    });
+    uploadBox.addEventListener('dragleave', function() {
+        if (uploadZone) uploadZone.classList.remove('border-sokyra-gold', 'bg-sokyra-gold/10');
+    });
+    uploadBox.addEventListener('drop', function(e) {
+        e.preventDefault();
+        if (uploadZone) uploadZone.classList.remove('border-sokyra-gold', 'bg-sokyra-gold/10');
+        if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    });
+    photoInput.addEventListener('change', function(e) { if (e.target.files.length) handleFile(e.target.files[0]); });
+
+    function handleFile(file) {
+        if (!file.type.startsWith('image/')) { alert('Виберіть зображення'); return; }
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+            previewImage.src = ev.target.result;
+            uploadContent.classList.add('hidden');
+            uploadPreview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    analyzeBtn.addEventListener('click', function() {
+        var file = photoInput.files[0];
+        if (!file) return;
+        var formData = new FormData();
+        formData.append('photo', file);
+        var csrf = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrf) formData.append('csrfmiddlewaretoken', csrf.value);
+        
+        var genderInput = document.querySelector('input[name="manual_gender"]:checked');
+        var manualGender = genderInput ? genderInput.value : 'men';
+        formData.append('manual_gender', manualGender);
+
+        uploadBox.classList.add('hidden');
+        loadingSection.classList.remove('hidden');
+        fetch('{% url "upload_photo_api" %}', {
+            method: 'POST',
+            body: formData,
+            headers: csrf ? { 'X-CSRFToken': csrf.value } : {}
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            loadingSection.classList.add('hidden');
+            if (data.success) {
+                resultsSection.classList.remove('hidden');
+                var faceShapeEl = document.getElementById('faceShapeText');
+                var faceShapeNameEl = document.getElementById('faceShapeName');
+                if (data.face_shape && faceShapeNameEl) {
+                    faceShapeNameEl.textContent = data.face_shape;
+                    if (faceShapeEl) faceShapeEl.classList.remove('hidden');
+                } else if (faceShapeEl) faceShapeEl.classList.add('hidden');
+                var surveyUsedEl = document.getElementById('surveyUsedText');
+                if (surveyUsedEl) surveyUsedEl.classList.toggle('hidden', !data.survey_used);
+                var findUrl = '{% url "find_master" %}';
+                recommendationsGrid.innerHTML = data.recommendations.map(function(rec) {
+                    var src = (rec.overlay_url && rec.overlay_url.length) ? rec.overlay_url : (rec.image || '');
+                    var img = src ? '<img src="' + src + '" alt="' + (rec.name || '') + '" class="w-full h-64 sm:h-72 object-cover object-top group-hover:scale-105 transition-transform duration-500" onclick="openLightbox(\'' + src + '\')">' : '<div class="w-full h-64 sm:h-72 bg-sokyra-card flex items-center justify-center text-sokyra-muted"><i class="fas fa-image text-4xl"></i></div>';
+                    var badge = (rec.overlay_url && rec.overlay_url.length && !rec.overlay_url.includes('homepage_style')) ? '<span class="absolute top-3 left-3 px-3 py-1.5 rounded-lg bg-sokyra-gold text-sokyra-dark text-xs font-bold shadow-lg z-10">Ви з цією зачіскою</span>' : '';
+                    var styleParam = encodeURIComponent(rec.name);
+                    var confidence = Math.round((rec.confidence || 0) * 100);
+                    var masters = rec.master_count || '46';
+                    
+                    var html = '<div class="group rounded-xl bg-sokyra-card border border-sokyra-border overflow-hidden hover:border-sokyra-gold/50 transition-all duration-300 block">';
+                    html += '<div class="relative overflow-hidden">' + badge + img + '</div>';
+                    html += '<div class="p-5">';
+                    html += '<div class="flex justify-between items-start mb-1">';
+                    html += '<h3 class="font-semibold text-white text-base group-hover:text-sokyra-gold transition-colors">' + rec.name + '</h3>';
+                    html += '<span class="text-sokyra-gold text-xs font-bold bg-sokyra-gold/10 px-2 py-0.5 rounded">' + confidence + '% збіг</span>';
+                    html += '</div>';
+                    html += '<p class="text-sokyra-muted text-sm mt-1.5 line-clamp-2">' + rec.description + '</p>';
+                    html += '<a href="' + findUrl + '?style=' + styleParam + '" class="flex justify-between items-center mt-4 pt-4 border-t border-sokyra-border/50 group/link">';
+                    html += '<span class="text-sokyra-muted text-sm">' + masters + ' майстрів</span>';
+                    html += '<span class="text-sokyra-gold group-hover/link:translate-x-1 transition-transform"><i class="fas fa-chevron-right text-sm"></i></span>';
+                    html += '</a></div></div>';
+                    return html;
+                }).join('');
+            } else {
+                uploadBox.classList.remove('hidden');
+                alert('Помилка при аналізі');
+            }
+        })
+        .catch(function() {
+            loadingSection.classList.add('hidden');
+            uploadBox.classList.remove('hidden');
+            alert('Помилка при завантаженні');
+        });
+    });
+
+    // Lightbox Logic
+    var modal = document.getElementById('imageModal');
+    var modalImg = document.getElementById('modalImg');
+    var closeModal = document.getElementById('closeModal');
+
+    window.openLightbox = function(src) {
+        modalImg.src = src;
+        modal.classList.remove('hidden');
+        setTimeout(function() {
+            modal.classList.add('opacity-100');
+            modalImg.classList.add('scale-100');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        modal.classList.remove('opacity-100');
+        modalImg.classList.remove('scale-100');
+        setTimeout(function() {
+            modal.classList.add('hidden');
+        }, 300);
+        document.body.style.overflow = '';
+    }
+
+    closeModal.onclick = closeLightbox;
+    modal.onclick = function(e) { if (e.target === modal) closeLightbox(); };
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
+});
+</script>
+{% endblock %}

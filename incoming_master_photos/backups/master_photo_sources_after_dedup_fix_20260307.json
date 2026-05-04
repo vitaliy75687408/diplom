@@ -1,0 +1,282 @@
+[
+  {
+    "id": 105,
+    "name": "Олександр Коваленко",
+    "profession": "barber",
+    "photo": "masters/work_105.jpg",
+    "source": "incoming_master_photos/barber_vitaliy.png"
+  },
+  {
+    "id": 106,
+    "name": "Дмитро Шевченко",
+    "profession": "barber",
+    "photo": "masters/work_106.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/barber_beard_trim_salon/02.jpg"
+  },
+  {
+    "id": 107,
+    "name": "Ігор Бондаренко",
+    "profession": "barber",
+    "photo": "masters/work_107.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/barber_beard_trim_salon/03.jpg"
+  },
+  {
+    "id": 108,
+    "name": "Богдан Мельник",
+    "profession": "barber",
+    "photo": "masters/work_108.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/barber_beard_trim_salon/04.jpg"
+  },
+  {
+    "id": 109,
+    "name": "Андрій Бондаренко",
+    "profession": "barber",
+    "photo": "masters/work_109.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/barber_beard_trim_salon/05.jpg"
+  },
+  {
+    "id": 110,
+    "name": "Сергій Кравцов",
+    "profession": "barber",
+    "photo": "masters/work_110.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/barber_beard_trim_salon/06.jpg"
+  },
+  {
+    "id": 111,
+    "name": "Роман Федоренко",
+    "profession": "barber",
+    "photo": "masters/work_111.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/barber_scissors_client/02.jpg"
+  },
+  {
+    "id": 112,
+    "name": "Максим Ткаченко",
+    "profession": "barber",
+    "photo": "masters/work_112.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/barber_scissors_client/03.jpg"
+  },
+  {
+    "id": 113,
+    "name": "Кирило Гриценко",
+    "profession": "barber",
+    "photo": "masters/work_113.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/barber_scissors_client/04.jpg"
+  },
+  {
+    "id": 114,
+    "name": "Юрій Лисенко",
+    "profession": "barber",
+    "photo": "masters/work_114.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/barber_scissors_client/05.jpg"
+  },
+  {
+    "id": 115,
+    "name": "Олег Сидоренко",
+    "profession": "barber",
+    "photo": "masters/work_115.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/barber_shaving_customer/01.jpg"
+  },
+  {
+    "id": 116,
+    "name": "Михайло Павленко",
+    "profession": "barber",
+    "photo": "masters/work_116.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/barber_shaving_customer/02.jpg"
+  },
+  {
+    "id": 117,
+    "name": "Станіслав Козак",
+    "profession": "barber",
+    "photo": "masters/work_117.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/barber_shaving_customer/03.jpg"
+  },
+  {
+    "id": 118,
+    "name": "Артем Мороз",
+    "profession": "barber",
+    "photo": "masters/work_118.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/barber_shaving_customer/04.jpg"
+  },
+  {
+    "id": 119,
+    "name": "Євген Захарченко",
+    "profession": "barber",
+    "photo": "masters/work_119.jpg",
+    "source": "static/images/hero-barber.jpg"
+  },
+  {
+    "id": 120,
+    "name": "Денис Білоус",
+    "profession": "barber",
+    "photo": "masters/work_120.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/barber_shaving_customer/06.jpg"
+  },
+  {
+    "id": 121,
+    "name": "Назар Тарасенко",
+    "profession": "barber",
+    "photo": "masters/work_121.jpg",
+    "source": "incoming_master_photos/unsplash_extra_unique/barber_trimming_neckline/01.jpg"
+  },
+  {
+    "id": 127,
+    "name": "Владислав Гончаренко",
+    "profession": "barber",
+    "photo": "masters/work_127.jpg",
+    "source": "incoming_master_photos/unsplash_extra_unique/barber_trimming_neckline/02.jpg"
+  },
+  {
+    "id": 131,
+    "name": "Тарас Коваль",
+    "profession": "barber",
+    "photo": "masters/work_131.jpg",
+    "source": "incoming_master_photos/unsplash_extra_unique/barber_trimming_neckline/04.jpg"
+  },
+  {
+    "id": 132,
+    "name": "Руслан Мельник",
+    "profession": "barber",
+    "photo": "masters/work_132.jpg",
+    "source": "incoming_master_photos/unsplash_extra_unique/barber_using_clippers_client/01.jpg"
+  },
+  {
+    "id": 136,
+    "name": "Арсен Лисенко",
+    "profession": "barber",
+    "photo": "masters/work_136.jpg",
+    "source": "incoming_master_photos/unsplash_extra_unique/barber_using_clippers_client/02.jpg"
+  },
+  {
+    "id": 138,
+    "name": "Віталій Павленко",
+    "profession": "barber",
+    "photo": "masters/work_138.jpg",
+    "source": "incoming_master_photos/unsplash_extra_unique/barber_using_clippers_client/04.jpg"
+  },
+  {
+    "id": 142,
+    "name": "Ярослав Клименко",
+    "profession": "barber",
+    "photo": "masters/work_142.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates/barber_cutting_hair/02.jpg"
+  },
+  {
+    "id": 144,
+    "name": "Павло Руденко",
+    "profession": "barber",
+    "photo": "masters/work_144.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates/barber_trimming_beard/01.jpg"
+  },
+  {
+    "id": 122,
+    "name": "Вадим Коваль",
+    "profession": "stylist",
+    "photo": "masters/work_122.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/female_hairstylist_cutting_hair/02.jpg"
+  },
+  {
+    "id": 123,
+    "name": "Марія Петренко",
+    "profession": "stylist",
+    "photo": "masters/work_123.jpg",
+    "source": "incoming_master_photos/unsplash_extra_unique/female_stylist_blow_drying_client_hair/04.jpg"
+  },
+  {
+    "id": 124,
+    "name": "Ілля Семененко",
+    "profession": "stylist",
+    "photo": "masters/work_124.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/hair_stylist_client_salon/01.jpg"
+  },
+  {
+    "id": 125,
+    "name": "Катерина Кравченко",
+    "profession": "stylist",
+    "photo": "masters/work_125.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/hair_stylist_client_salon/02.jpg"
+  },
+  {
+    "id": 126,
+    "name": "Анна Шевчук",
+    "profession": "stylist",
+    "photo": "masters/work_126.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/hair_stylist_client_salon/03.jpg"
+  },
+  {
+    "id": 128,
+    "name": "Олена Савченко",
+    "profession": "colorist",
+    "photo": "masters/work_128.jpg",
+    "source": "incoming_master_photos/unsplash_extra_unique/colorist_applying_hair_color_client/03.jpg"
+  },
+  {
+    "id": 129,
+    "name": "Наталія Ковальчук",
+    "profession": "colorist",
+    "photo": "masters/work_129.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/hairdresser_blow_drying_client/05.jpg"
+  },
+  {
+    "id": 130,
+    "name": "Тетяна Бойко",
+    "profession": "colorist",
+    "photo": "masters/work_130.jpg",
+    "source": "incoming_master_photos/unsplash_team_candidates_v2/hairdresser_blow_drying_client/06.jpg"
+  },
+  {
+    "id": 133,
+    "name": "Христина Кравченко",
+    "profession": "stylist",
+    "photo": "masters/work_133.jpg",
+    "source": "incoming_master_photos/unsplash_women_extra/female_hairdresser_working_client/02.jpg"
+  },
+  {
+    "id": 134,
+    "name": "Лілія Ткаченко",
+    "profession": "stylist",
+    "photo": "masters/work_134.jpg",
+    "source": "incoming_master_photos/unsplash_women_extra/female_hairdresser_working_client/05.jpg"
+  },
+  {
+    "id": 135,
+    "name": "Вікторія Оніщенко",
+    "profession": "colorist",
+    "photo": "masters/work_135.jpg",
+    "source": "incoming_master_photos/unsplash_women_extra/hairstylist_braiding_hair/02.jpg"
+  },
+  {
+    "id": 137,
+    "name": "Юлія Савченко",
+    "profession": "stylist",
+    "photo": "masters/work_137.jpg",
+    "source": "incoming_master_photos/unsplash_women_extra/woman_barber_cutting_hair/01.jpg"
+  },
+  {
+    "id": 139,
+    "name": "Дарина Коваленко",
+    "profession": "stylist",
+    "photo": "masters/work_139.jpg",
+    "source": "incoming_master_photos/unsplash_women_extra/woman_barber_cutting_hair/03.jpg"
+  },
+  {
+    "id": 140,
+    "name": "Вероніка Гриценко",
+    "profession": "colorist",
+    "photo": "masters/work_140.jpg",
+    "source": "incoming_master_photos/unsplash_women_extra/hairstylist_braiding_hair/05.jpg"
+  },
+  {
+    "id": 141,
+    "name": "Ірина Марченко",
+    "profession": "stylist",
+    "photo": "masters/work_141.jpg",
+    "source": "incoming_master_photos/unsplash_extra_unique/hairdresser_washing_client_hair/01.jpg"
+  },
+  {
+    "id": 143,
+    "name": "Софія Захарченко",
+    "profession": "stylist",
+    "photo": "masters/work_143.jpg",
+    "source": "incoming_master_photos/unsplash_extra_unique/hairdresser_washing_client_hair/03.jpg"
+  }
+]

@@ -1,0 +1,299 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-6">
+
+    <!-- Hero Section -->
+    <section class="flex flex-col lg:flex-row items-center justify-between py-12 lg:py-20 gap-12 min-h-[80vh]">
+        <div class="lg:w-1/2 space-y-6">
+            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-100 text-gray-700 text-sm font-medium">
+                <span aria-hidden="true">🤖</span> AI-Технологія
+            </span>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-gray-900">
+                Ідеальна зачіска <br>
+                <span class="text-primary-600">за допомогою AI</span>
+            </h1>
+            <p class="text-lg text-gray-600 max-w-lg">
+                Штучний інтелект підбере ідеальну зачіску під ваш тип обличчя, структуру волосся та стиль життя. Знайдіть свого майстра за лічені хвилини!
+            </p>
+            <div class="flex flex-wrap gap-4">
+                <a href="#quiz" class="inline-flex items-center gap-2 bg-primary-600 text-white px-8 py-4 rounded-full text-base font-semibold shadow-lg shadow-primary-600/25 hover:bg-primary-700 transition">
+                    Підібрати зачіску →
+                </a>
+                <a href="{% url 'master_list' %}" class="inline-flex items-center gap-2 bg-white text-gray-700 px-8 py-4 rounded-full text-base font-semibold border-2 border-gray-200 hover:border-primary-300 hover:bg-gray-50 transition">
+                    Знайти майстра
+                </a>
+            </div>
+        </div>
+        <div class="lg:w-1/2 relative w-full">
+            <div class="relative rounded-3xl overflow-hidden shadow-2xl aspect-[4/5] max-h-[600px] bg-gradient-to-br from-primary-100 to-primary-200">
+                <img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=800&q=80" alt="Салон та AI" class="w-full h-full object-cover" loading="lazy">
+                <div class="absolute bottom-4 right-4 left-4 sm:left-auto sm:w-64 bg-white/95 backdrop-blur rounded-2xl p-4 shadow-lg">
+                    <div class="flex items-start gap-3">
+                        <span class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 font-bold">!</span>
+                        <div>
+                            <p class="font-bold text-gray-800">95% точність</p>
+                            <p class="text-sm text-gray-600">Понад 50,000 задоволених клієнтів</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features: Чому обирають StyleAI? -->
+    <section id="features" class="py-20">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-2">Чому обирають StyleAI?</h2>
+        <p class="text-center text-gray-500 mb-12 max-w-xl mx-auto">Інноваційні технології для вашого ідеального образу</p>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-purple-50 rounded-3xl p-8 text-center hover:shadow-lg transition">
+                <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-primary-500 flex items-center justify-center text-white text-2xl">🧠</div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">AI-Аналіз</h3>
+                <p class="text-gray-600">Штучний інтелект аналізує форму обличчя, тип волосся та ваші побажання для підбору ідеальної зачіски</p>
+            </div>
+            <div class="bg-pink-50 rounded-3xl p-8 text-center hover:shadow-lg transition">
+                <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-pink-500 flex items-center justify-center text-white text-2xl">✓</div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Пошук майстра</h3>
+                <p class="text-gray-600">Знайдіть перевіреного барбера або стиліста, який спеціалізується на вашому стилі та типі волосся</p>
+            </div>
+            <div class="bg-purple-50 rounded-3xl p-8 text-center hover:shadow-lg transition">
+                <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-primary-500 flex items-center justify-center text-white text-2xl">🖼️</div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Візуалізація</h3>
+                <p class="text-gray-600">Побачте, як ви виглядатимете з новою зачіскою ще до відвідування салону за допомогою AR-технології</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Survey Section -->
+    <section id="quiz" class="py-20">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-2">Пройдіть опитування</h2>
+        <p class="text-center text-gray-500 mb-10">Відповідайте на питання, щоб отримати персональні рекомендації</p>
+
+        <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl p-8 sm:p-10">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
+                <span class="text-gray-600 font-semibold">Крок {{ step }} з 4</span>
+                <div class="flex items-center gap-3 flex-1 min-w-[200px] max-w-md">
+                    <div class="flex-1 h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                        <div class="h-full bg-primary-600 rounded-full transition-all duration-500" style="width: {% if step == 1 %}25%{% elif step == 2 %}50%{% elif step == 3 %}75%{% else %}100%{% endif %}"></div>
+                    </div>
+                    <span class="text-sm font-medium text-gray-500">{% if step == 1 %}25%{% elif step == 2 %}50%{% elif step == 3 %}75%{% else %}100%{% endif %} завершено</span>
+                </div>
+            </div>
+
+            <form method="POST" action="{% url 'home' %}#quiz">
+                {% csrf_token %}
+                <input type="hidden" name="step" value="{{ step }}">
+
+                {% if step == 1 %}
+                <h3 class="text-2xl font-bold text-gray-900 mb-8">Який у вас тип волосся?</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="hair_type" value="straight" class="peer sr-only" required>
+                        <div class="rounded-2xl p-6 border-2 border-gray-100 bg-blue-50/50 peer-checked:border-primary-500 peer-checked:bg-primary-50/80 transition text-center">
+                            <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 text-xl">〰</div>
+                            <p class="font-bold text-gray-800">Пряме волосся</p>
+                            <p class="text-sm text-gray-500 mt-1">Гладко без завитків</p>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="hair_type" value="wavy" class="peer sr-only" required>
+                        <div class="rounded-2xl p-6 border-2 border-gray-100 bg-pink-50/50 peer-checked:border-primary-500 peer-checked:bg-primary-50/80 transition text-center">
+                            <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-pink-200 flex items-center justify-center text-pink-700 text-xl">∿</div>
+                            <p class="font-bold text-gray-800">Хвилясте волосся</p>
+                            <p class="text-sm text-gray-500 mt-1">Легкі хвилі</p>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="hair_type" value="curly" class="peer sr-only" required>
+                        <div class="rounded-2xl p-6 border-2 border-gray-100 bg-purple-50/50 peer-checked:border-primary-500 peer-checked:bg-primary-50/80 transition text-center">
+                            <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-purple-200 flex items-center justify-center text-purple-700 text-xl">⌒</div>
+                            <p class="font-bold text-gray-800">Кучеряве волосся</p>
+                            <p class="text-sm text-gray-500 mt-1">Виражені кучері</p>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="hair_type" value="very_curly" class="peer sr-only" required>
+                        <div class="rounded-2xl p-6 border-2 border-gray-100 bg-amber-50/50 peer-checked:border-primary-500 peer-checked:bg-primary-50/80 transition text-center">
+                            <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-amber-200 flex items-center justify-center text-amber-700 text-xl">◎</div>
+                            <p class="font-bold text-gray-800">Дуже кучеряве</p>
+                            <p class="text-sm text-gray-500 mt-1">Афро, тугі кучері</p>
+                        </div>
+                    </label>
+                </div>
+
+                {% elif step == 2 %}
+                <h3 class="text-2xl font-bold text-gray-900 mb-8">Яка у вас форма обличчя?</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="face_shape" value="oval" class="peer sr-only" required>
+                        <div class="rounded-2xl p-6 border-2 border-gray-100 bg-gray-50 peer-checked:border-primary-500 peer-checked:bg-primary-50/80 transition text-center">
+                            <span class="font-bold text-gray-700">Овальне</span>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="face_shape" value="round" class="peer sr-only" required>
+                        <div class="rounded-2xl p-6 border-2 border-gray-100 bg-gray-50 peer-checked:border-primary-500 peer-checked:bg-primary-50/80 transition text-center">
+                            <span class="font-bold text-gray-700">Кругле</span>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="face_shape" value="square" class="peer sr-only" required>
+                        <div class="rounded-2xl p-6 border-2 border-gray-100 bg-gray-50 peer-checked:border-primary-500 peer-checked:bg-primary-50/80 transition text-center">
+                            <span class="font-bold text-gray-700">Квадратне</span>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="face_shape" value="heart" class="peer sr-only" required>
+                        <div class="rounded-2xl p-6 border-2 border-gray-100 bg-gray-50 peer-checked:border-primary-500 peer-checked:bg-primary-50/80 transition text-center">
+                            <span class="font-bold text-gray-700">Серце</span>
+                        </div>
+                    </label>
+                </div>
+
+                {% elif step == 3 %}
+                <h3 class="text-2xl font-bold text-gray-900 mb-8">Який ваш спосіб життя?</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="lifestyle" value="office" class="peer sr-only" required>
+                        <div class="rounded-2xl p-6 border-2 border-gray-100 bg-gray-50 peer-checked:border-primary-500 peer-checked:bg-primary-50/80 transition text-center">
+                            <div class="text-4xl mb-4">💼</div>
+                            <span class="font-bold text-gray-700">Офіс / Бізнес</span>
+                            <p class="text-sm text-gray-500 mt-2">Акуратність та стиль</p>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="lifestyle" value="active" class="peer sr-only" required>
+                        <div class="rounded-2xl p-6 border-2 border-gray-100 bg-gray-50 peer-checked:border-primary-500 peer-checked:bg-primary-50/80 transition text-center">
+                            <div class="text-4xl mb-4">🏃</div>
+                            <span class="font-bold text-gray-700">Спорт / Актив</span>
+                            <p class="text-sm text-gray-500 mt-2">Зручність перш за все</p>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="lifestyle" value="creative" class="peer sr-only" required>
+                        <div class="rounded-2xl p-6 border-2 border-gray-100 bg-gray-50 peer-checked:border-primary-500 peer-checked:bg-primary-50/80 transition text-center">
+                            <div class="text-4xl mb-4">🎨</div>
+                            <span class="font-bold text-gray-700">Творчість</span>
+                            <p class="text-sm text-gray-500 mt-2">Експерименти та воля</p>
+                        </div>
+                    </label>
+                </div>
+
+                {% elif step == 4 %}
+                <h3 class="text-2xl font-bold text-gray-900 mb-8">Що для вас найважливіше?</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="priority" value="practical" class="peer sr-only" required>
+                        <div class="rounded-2xl p-6 border-2 border-gray-100 bg-gray-50 peer-checked:border-primary-500 peer-checked:bg-primary-50/80 transition text-center">
+                            <div class="text-4xl mb-4">⏱️</div>
+                            <span class="font-bold text-gray-700">Практичність</span>
+                            <p class="text-sm text-gray-500 mt-2">Мінімум часу на укладку</p>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="priority" value="style" class="peer sr-only" required>
+                        <div class="rounded-2xl p-6 border-2 border-gray-100 bg-gray-50 peer-checked:border-primary-500 peer-checked:bg-primary-50/80 transition text-center">
+                            <div class="text-4xl mb-4">🔥</div>
+                            <span class="font-bold text-gray-700">Стиль / Тренди</span>
+                            <p class="text-sm text-gray-500 mt-2">Хочу бути в топі</p>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="priority" value="versatile" class="peer sr-only" required>
+                        <div class="rounded-2xl p-6 border-2 border-gray-100 bg-gray-50 peer-checked:border-primary-500 peer-checked:bg-primary-50/80 transition text-center">
+                            <div class="text-4xl mb-4">🔄</div>
+                            <span class="font-bold text-gray-700">Універсальність</span>
+                            <p class="text-sm text-gray-500 mt-2">І в офіс, і на вечірку</p>
+                        </div>
+                    </label>
+                </div>
+                {% endif %}
+
+                <div class="mt-10 flex justify-between">
+                    {% if step > 1 %}
+                    <form method="post" action="{% url 'home' %}#quiz" class="inline">{% csrf_token %}<input type="hidden" name="back" value="1"><button type="submit" class="px-6 py-3 rounded-full font-medium text-gray-600 hover:bg-gray-100 transition">← Назад</button></form>
+                    {% else %}
+                    <span></span>
+                    {% endif %}
+                    <button type="submit" class="px-8 py-3 rounded-full font-semibold bg-primary-600 text-white hover:bg-primary-700 transition">
+                        {% if step == 4 %}Отримати результат{% else %}Далі →{% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Survey steps nav (footer) -->
+        <div class="max-w-3xl mx-auto mt-10 flex flex-wrap justify-center gap-6 sm:gap-8">
+            <div class="flex items-center gap-2 {% if step == 1 %}text-primary-600 font-semibold{% else %}text-gray-400{% endif %}">
+                <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm {% if step == 1 %}bg-primary-100{% else %}bg-gray-200{% endif %}">1</span>
+                <div class="text-left">
+                    <p class="font-medium">Тип волосся</p>
+                    <p class="text-xs opacity-80">Структура та текстура</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 {% if step == 2 %}text-primary-600 font-semibold{% else %}text-gray-400{% endif %}">
+                <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm {% if step == 2 %}bg-primary-100{% else %}bg-gray-200{% endif %}">2</span>
+                <div class="text-left">
+                    <p class="font-medium">Форма обличчя</p>
+                    <p class="text-xs opacity-80">Овал, круг, квадрат</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 {% if step == 3 %}text-primary-600 font-semibold{% else %}text-gray-400{% endif %}">
+                <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm {% if step == 3 %}bg-primary-100{% else %}bg-gray-200{% endif %}">3</span>
+                <div class="text-left">
+                    <p class="font-medium">Спосіб життя</p>
+                    <p class="text-xs opacity-80">Активність, професія</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 {% if step == 4 %}text-primary-600 font-semibold{% else %}text-gray-400{% endif %}">
+                <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm {% if step == 4 %}bg-primary-100{% else %}bg-gray-200{% endif %}">4</span>
+                <div class="text-left">
+                    <p class="font-medium">Пріоритети</p>
+                    <p class="text-xs opacity-80">Що важливо для вас</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how-it-works" class="py-20 rounded-3xl overflow-hidden bg-gradient-to-br from-primary-800 via-primary-700 to-purple-600 text-white">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-2">Як це працює?</h2>
+            <p class="text-primary-100 mb-14">Простий процес до ідеального образу</p>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div>
+                    <div class="w-14 h-14 mx-auto mb-4 rounded-full border-2 border-white flex items-center justify-center text-xl font-bold">1</div>
+                    <h3 class="font-bold text-lg mb-2">Опитування</h3>
+                    <p class="text-primary-100 text-sm">Відповідайте на питання про волосся та стиль життя</p>
+                </div>
+                <div>
+                    <div class="w-14 h-14 mx-auto mb-4 rounded-full border-2 border-white flex items-center justify-center text-xl font-bold">2</div>
+                    <h3 class="font-bold text-lg mb-2">AI-Аналіз</h3>
+                    <p class="text-primary-100 text-sm">Штучний інтелект обробляє дані та підбирає варіанти</p>
+                </div>
+                <div>
+                    <div class="w-14 h-14 mx-auto mb-4 rounded-full border-2 border-white flex items-center justify-center text-xl font-bold">3</div>
+                    <h3 class="font-bold text-lg mb-2">Візуалізація</h3>
+                    <p class="text-primary-100 text-sm">Подивіться, як ви виглядатимете з новою зачіскою</p>
+                </div>
+                <div>
+                    <div class="w-14 h-14 mx-auto mb-4 rounded-full border-2 border-white flex items-center justify-center text-xl font-bold">4</div>
+                    <h3 class="font-bold text-lg mb-2">Запис</h3>
+                    <p class="text-primary-100 text-sm">Оберіть майстра та запишіться на зручний час</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 text-center">
+        <h2 class="text-3xl font-bold text-gray-900 mb-2">Готові змінити свій образ?</h2>
+        <p class="text-gray-500 mb-8 max-w-xl mx-auto">Приєднуйтесь до тисяч задоволених клієнтів, які вже знайшли свій ідеальний стиль</p>
+        <a href="#quiz" class="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-white bg-gradient-to-r from-blue-500 to-primary-600 hover:from-blue-600 hover:to-primary-700 shadow-lg transition">
+            Почати зараз безкоштовно →
+        </a>
+        <p class="mt-6 text-xs text-gray-400">Без реєстрації • Результат за 2 хвилини • 100% безпечно</p>
+    </section>
+
+</div>
+{% endblock %}

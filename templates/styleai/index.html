@@ -1,0 +1,330 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero (текст зліва, зображення справа) -->
+<section class="relative min-h-[85vh] flex items-center bg-sokyra-dark overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-sokyra-dark/95 to-sokyra-dark"></div>
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 w-full py-16 lg:py-20">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div class="max-w-xl">
+                <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-semibold text-white leading-tight mb-6" data-aos="fade-up">
+                    StyleAI — знайди свій ідеальний стиль
+                </h1>
+                <p class="text-sokyra-light/90 text-lg mb-10 leading-relaxed" data-aos="fade-up" data-aos-delay="50">
+                    Підбір зачіски за допомогою AI та пошук професійних майстрів. Будь собою, створюй новий образ разом з нами.
+                </p>
+                <div class="flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="100">
+                    <a href="{% url 'hairstyle_selection' %}" class="btn-sokyra inline-flex items-center gap-2 px-8 py-4 rounded-lg text-base">
+                        Підібрати <i class="fas fa-arrow-right text-sm"></i>
+                    </a>
+                    <a href="{% url 'generate_hairstyle' %}" class="btn-outline-sokyra inline-flex items-center gap-2 px-8 py-4 rounded-lg text-base">
+                        <i class="fas fa-wand-magic-sparkles text-sm"></i> Згенерувати зачіску на фото
+                    </a>
+                </div>
+            </div>
+            <div class="flex-shrink-0 order-first lg:order-none lg:block" data-aos="fade-left" data-aos-delay="100">
+                <div class="rounded-2xl overflow-hidden border border-sokyra-border shadow-2xl max-w-sm sm:max-w-md lg:max-w-lg mx-auto">
+                    <img src="{% static 'images/hero-barber.jpg' %}?v=7" alt="Чоловіча зачіска — фейд, текстурований кроп" class="w-full aspect-[3/4] object-cover" loading="eager" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600&q=80';">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Популярні послуги -->
+<section class="py-20 sm:py-24 bg-sokyra-dark border-t border-sokyra-border">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-14" data-aos="fade-up">
+            <h2 class="section-title text-3xl sm:text-4xl text-white mb-3">Популярні послуги</h2>
+            <p class="text-sokyra-muted text-lg">Оберіть послугу — знайдіть найкращого майстра</p>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
+            <a href="{% url 'find_master' %}?style=Fade" class="group rounded-xl p-6 bg-sokyra-card border border-sokyra-border hover:border-sokyra-gold/50 transition-all text-center block" data-aos="fade-up">
+                <div class="w-14 h-14 mx-auto rounded-xl bg-sokyra-gold/15 flex items-center justify-center text-sokyra-gold text-2xl mb-4 group-hover:bg-sokyra-gold/25 transition-colors"><i class="fas fa-cut"></i></div>
+                <h3 class="text-white font-medium text-sm">Стрижка</h3>
+            </a>
+            <a href="{% url 'find_master' %}?category=colorist" class="group rounded-xl p-6 bg-sokyra-card border border-sokyra-border hover:border-sokyra-gold/50 transition-all text-center block" data-aos="fade-up" data-aos-delay="50">
+                <div class="w-14 h-14 mx-auto rounded-xl bg-sokyra-gold/15 flex items-center justify-center text-sokyra-gold text-2xl mb-4 group-hover:bg-sokyra-gold/25 transition-colors"><i class="fas fa-palette"></i></div>
+                <h3 class="text-white font-medium text-sm">Фарбування</h3>
+            </a>
+            <a href="{% url 'find_master' %}?style=Slick+Back" class="group rounded-xl p-6 bg-sokyra-card border border-sokyra-border hover:border-sokyra-gold/50 transition-all text-center block" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-14 h-14 mx-auto rounded-xl bg-sokyra-gold/15 flex items-center justify-center text-sokyra-gold text-2xl mb-4 group-hover:bg-sokyra-gold/25 transition-colors"><i class="fas fa-wind"></i></div>
+                <h3 class="text-white font-medium text-sm">Укладка</h3>
+            </a>
+            <a href="{% url 'find_master' %}?category=barber" class="group rounded-xl p-6 bg-sokyra-card border border-sokyra-border hover:border-sokyra-gold/50 transition-all text-center block" data-aos="fade-up" data-aos-delay="150">
+                <div class="w-14 h-14 mx-auto rounded-xl bg-sokyra-gold/15 flex items-center justify-center text-sokyra-gold text-2xl mb-4 group-hover:bg-sokyra-gold/25 transition-colors"><i class="fas fa-face-grin-beam"></i></div>
+                <h3 class="text-white font-medium text-sm">Борода</h3>
+            </a>
+            <a href="{% url 'find_master' %}" class="group rounded-xl p-6 bg-sokyra-card border border-sokyra-border hover:border-sokyra-gold/50 transition-all text-center block" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-14 h-14 mx-auto rounded-xl bg-sokyra-gold/15 flex items-center justify-center text-sokyra-gold text-2xl mb-4 group-hover:bg-sokyra-gold/25 transition-colors"><i class="fas fa-child"></i></div>
+                <h3 class="text-white font-medium text-sm">Дитяча стрижка</h3>
+            </a>
+            <a href="{% url 'find_master' %}?category=stylist" class="group rounded-xl p-6 bg-sokyra-card border border-sokyra-border hover:border-sokyra-gold/50 transition-all text-center block" data-aos="fade-up" data-aos-delay="250">
+                <div class="w-14 h-14 mx-auto rounded-xl bg-sokyra-gold/15 flex items-center justify-center text-sokyra-gold text-2xl mb-4 group-hover:bg-sokyra-gold/25 transition-colors"><i class="fas fa-eye"></i></div>
+                <h3 class="text-white font-medium text-sm">Брови</h3>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Як працює (3 кроки — у темній темі) -->
+<section class="py-20 sm:py-24 bg-sokyra-darker border-t border-sokyra-border">
+
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-14" data-aos="fade-up">
+            <h2 class="section-title text-3xl sm:text-4xl text-white mb-3">Як працює AI підбір</h2>
+            <p class="text-sokyra-muted text-lg">Три кроки до ідеальної зачіски</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div data-aos="fade-up" class="rounded-xl p-8 bg-sokyra-card border border-sokyra-border hover:border-sokyra-gold/40 transition-colors relative">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-14 h-14 rounded-xl bg-sokyra-gold/20 flex items-center justify-center text-sokyra-gold text-xl font-bold font-heading">01</div>
+                    <h3 class="text-xl font-semibold text-white">Завантажте фото</h3>
+                </div>
+                <p class="text-sokyra-muted leading-relaxed">Завантажте своє фото. AI проаналізує форму обличчя та підбере найкращі варіанти.</p>
+            </div>
+            <div data-aos="fade-up" data-aos-delay="100" class="rounded-xl p-8 bg-sokyra-card border border-sokyra-border hover:border-sokyra-gold/40 transition-colors relative">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-14 h-14 rounded-xl bg-sokyra-gold/20 flex items-center justify-center text-sokyra-gold text-xl font-bold font-heading">02</div>
+                    <h3 class="text-xl font-semibold text-white">AI аналіз</h3>
+                </div>
+                <p class="text-sokyra-muted leading-relaxed">Штучний інтелект підбере зачіски, які найкраще підходять вашій формі обличчя.</p>
+            </div>
+            <div data-aos="fade-up" data-aos-delay="200" class="rounded-xl p-8 bg-sokyra-card border border-sokyra-border hover:border-sokyra-gold/40 transition-colors relative">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-14 h-14 rounded-xl bg-sokyra-gold/20 flex items-center justify-center text-sokyra-gold text-xl font-bold font-heading">03</div>
+                    <h3 class="text-xl font-semibold text-white">Оберіть майстра</h3>
+                </div>
+                <p class="text-sokyra-muted leading-relaxed">Знайдіть перукаря або барбера, який спеціалізується на обраному стилі.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Популярні зачіски (ті самі, з яких підбираються рекомендації) -->
+<section class="py-20 sm:py-24 bg-sokyra-dark border-t border-sokyra-border">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10" data-aos="fade-up">
+            <div>
+                <h2 class="section-title text-3xl sm:text-4xl text-white mb-2">Популярні зачіски</h2>
+                <p class="text-sokyra-muted text-lg">Натхніться трендовими зачісками</p>
+            </div>
+            <div class="flex gap-2">
+                <button type="button" class="popular-styles-prev w-12 h-12 rounded-full bg-sokyra-card border border-sokyra-border text-sokyra-muted flex items-center justify-center hover:border-sokyra-gold/50 hover:text-sokyra-gold transition-colors disabled:opacity-50 disabled:cursor-not-allowed" aria-label="Назад"><i class="fas fa-chevron-left"></i></button>
+                <button type="button" class="popular-styles-next w-12 h-12 rounded-full bg-sokyra-gold text-sokyra-dark flex items-center justify-center hover:bg-sokyra-goldLight transition-colors" aria-label="Вперед"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+        <div class="overflow-hidden -mx-4 px-4 sm:-mx-6 sm:px-6">
+            <div id="carousel" class="popular-styles-carousel flex gap-5 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory" style="scrollbar-width: thin;">
+                {% for style in popular_styles %}
+                <a href="{% url 'find_master' %}?style={{ style.name|urlencode }}" class="popular-style-card flex-shrink-0 w-[260px] sm:w-[280px] snap-start rounded-xl bg-sokyra-card border border-sokyra-border overflow-hidden hover:border-sokyra-gold/50 transition-all duration-200 block">
+                    <img src="{{ style.remote_image_url|default:'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&q=80' }}" alt="{{ style.name }}" class="w-full h-64 sm:h-72 object-top object-cover" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&q=80';">
+                    <div class="p-5">
+                        <h3 class="font-semibold text-white text-base">{{ style.name }}</h3>
+                        <p class="text-sokyra-muted text-sm mt-1.5 line-clamp-2">{{ style.description }}</p>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-sokyra-muted text-sm">{{ style.master_count }} майстрів</span>
+                            <span class="text-sokyra-gold"><i class="fas fa-chevron-right text-sm"></i></span>
+                        </div>
+                    </div>
+                </a>
+                {% empty %}
+                <p class="text-sokyra-muted py-8">Зачіски будуть додані пізніше</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="mt-10 text-center" data-aos="fade-up">
+            <a href="{% url 'find_master' %}" class="btn-outline-sokyra inline-flex items-center gap-2 px-6 py-3 rounded-lg">Переглянути всіх майстрів</a>
+        </div>
+    </div>
+</section>
+
+<!-- Наші партнери (карусель барбершопів) -->
+<section class="py-20 sm:py-24 bg-sokyra-darker border-t border-sokyra-border">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10" data-aos="fade-up">
+            <div>
+                <h2 class="section-title text-3xl sm:text-4xl text-white mb-2">Наші партнери</h2>
+                <p class="text-sokyra-muted text-lg">Барбершопи та салони, з якими ми співпрацюємо</p>
+            </div>
+            <div class="flex gap-2">
+                <button type="button" class="partners-prev w-12 h-12 rounded-full bg-sokyra-card border border-sokyra-border text-sokyra-muted flex items-center justify-center hover:border-sokyra-gold/50 hover:text-sokyra-gold transition-colors disabled:opacity-50 disabled:cursor-not-allowed" aria-label="Назад"><i class="fas fa-chevron-left"></i></button>
+                <button type="button" class="partners-next w-12 h-12 rounded-full bg-sokyra-gold text-sokyra-dark flex items-center justify-center hover:bg-sokyra-goldLight transition-colors" aria-label="Вперед"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+        <div class="overflow-hidden -mx-4 px-4 sm:-mx-6 sm:px-6">
+            <div id="partnersCarousel" class="flex gap-5 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory" style="scrollbar-width: thin;">
+                {% for shop in barbershops %}
+                <div class="flex-shrink-0 w-[260px] sm:w-[300px] snap-start rounded-xl bg-sokyra-card border border-sokyra-border overflow-hidden hover:border-sokyra-gold/50 transition-all">
+                    <div class="h-40 overflow-hidden">
+                        {% if shop.logo %}
+                        <img src="{{ shop.logo.url }}" alt="{{ shop.name }}" class="w-full h-full object-cover" loading="lazy">
+                        {% else %}
+                        <img src="https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=800&q=80" alt="Barbershop interior" class="w-full h-full object-cover" loading="lazy">
+                        {% endif %}
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-semibold text-white text-base mb-1">{{ shop.name }}</h3>
+                        {% if shop.address %}<p class="text-sokyra-muted text-sm flex items-center gap-1.5"><i class="fas fa-map-marker-alt text-sokyra-gold/60 text-xs"></i> {{ shop.address }}{% if shop.city %}, {{ shop.city }}{% endif %}</p>{% endif %}
+                        {% if shop.description %}<p class="text-sokyra-muted text-sm mt-2 line-clamp-2">{{ shop.description }}</p>{% endif %}
+                        {% if shop.website %}
+                        <a href="{{ shop.website }}" target="_blank" rel="noopener" class="text-sokyra-gold text-sm font-medium mt-3 inline-flex items-center gap-1 hover:underline"><i class="fas fa-external-link-alt text-xs"></i> Відвідати сайт</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <!-- Заглушки, поки немає барбершопів у БД -->
+                <div class="flex-shrink-0 w-[260px] sm:w-[300px] snap-start rounded-xl bg-sokyra-card border border-sokyra-border overflow-hidden">
+                    <div class="h-40 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1200&q=85" 
+                             alt="Muzyka Barbershop interior" 
+                             class="w-full h-full object-cover" 
+                             loading="lazy"
+                             onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=1200&q=80';">
+                    </div>
+                    <div class="p-5"><h3 class="font-semibold text-white">Muzyka Barbershop</h3><p class="text-sokyra-muted text-sm mt-1"><i class="fas fa-map-marker-alt text-sokyra-gold/60 text-xs"></i> Київ, вул. Велика Васильківська 25</p></div>
+                </div>
+                <div class="flex-shrink-0 w-[260px] sm:w-[300px] snap-start rounded-xl bg-sokyra-card border border-sokyra-border overflow-hidden">
+                    <div class="h-40 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1622288432450-277d0fef5ed6?w=1200&q=80"
+                             alt="Muzyka Barbershop interior"
+                             class="w-full h-full object-cover"
+                             loading="lazy"
+                             onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=1200&q=80';">
+                    </div>
+                    <div class="p-5"><h3 class="font-semibold text-white">Men's Hall</h3><p class="text-sokyra-muted text-sm mt-1"><i class="fas fa-map-marker-alt text-sokyra-gold/60 text-xs"></i> Львів, пр. Свободи 5</p></div>
+                </div>
+                <div class="flex-shrink-0 w-[260px] sm:w-[300px] snap-start rounded-xl bg-sokyra-card border border-sokyra-border overflow-hidden">
+                    <div class="h-40 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800&q=80" alt="Chop-Chop barbershop interior" class="w-full h-full object-cover" loading="lazy">
+                    </div>
+                    <div class="p-5"><h3 class="font-semibold text-white">Chop-Chop</h3><p class="text-sokyra-muted text-sm mt-1"><i class="fas fa-map-marker-alt text-sokyra-gold/60 text-xs"></i> Одеса, Дерибасівська 15</p></div>
+                </div>
+                <div class="flex-shrink-0 w-[260px] sm:w-[300px] snap-start rounded-xl bg-sokyra-card border border-sokyra-border overflow-hidden">
+                    <div class="h-40 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=80" alt="OldBoy Barbershop interior" class="w-full h-full object-cover" loading="lazy">
+                    </div>
+                    <div class="p-5"><h3 class="font-semibold text-white">OldBoy Barbershop</h3><p class="text-sokyra-muted text-sm mt-1"><i class="fas fa-map-marker-alt text-sokyra-gold/60 text-xs"></i> Харків, вул. Сумська 20</p></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Опитування CTA -->
+<section class="py-20 sm:py-24 bg-sokyra-dark border-t border-sokyra-border">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div data-aos="fade-up" class="rounded-xl border border-sokyra-border bg-sokyra-card p-8 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-xl bg-sokyra-gold/20 flex items-center justify-center text-sokyra-gold text-2xl"><i class="fas fa-clipboard-list"></i></div>
+                <div>
+                    <h2 class="text-xl font-semibold text-white">Опитування для точнішого підбору</h2>
+                    <p class="text-sokyra-muted text-sm mt-0.5">Тип волосся, спосіб життя, побажання — отримай кращі рекомендації</p>
+                </div>
+            </div>
+            <a href="{% url 'survey' %}" class="btn-sokyra shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-lg">Пройти опитування <i class="fas fa-arrow-right text-sm"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- Відгуки -->
+<section class="py-20 sm:py-24 bg-sokyra-darker border-t border-sokyra-border">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-14" data-aos="fade-up">
+            <h2 class="section-title text-3xl sm:text-4xl text-white mb-3">Відгуки користувачів</h2>
+            <p class="text-sokyra-muted text-lg">Що кажуть наші клієнти</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+            {% for review in reviews %}
+            <div data-aos="fade-up" class="rounded-xl bg-sokyra-card border border-sokyra-border p-8">
+                <div class="flex items-center gap-4 mb-5">
+                    <img src="{{ review.avatar_url }}" alt="{{ review.author_name }}" class="w-14 h-14 rounded-full object-cover flex-shrink-0" loading="lazy">
+                    <div>
+                        <h4 class="font-semibold text-white">{{ review.author_name }}</h4>
+                        <div class="flex text-sokyra-gold text-sm mt-0.5">{% for i in "12345" %}{% if forloop.counter <= review.rating %}<i class="fas fa-star"></i>{% else %}<i class="far fa-star"></i>{% endif %}{% endfor %}</div>
+                    </div>
+                </div>
+                <p class="text-sokyra-light/90 leading-relaxed">«{{ review.text }}»</p>
+            </div>
+            {% empty %}
+            <div class="md:col-span-3 grid md:grid-cols-3 gap-8">
+                <div class="rounded-xl bg-sokyra-card border border-sokyra-border p-8">
+                    <div class="flex items-center gap-4 mb-5">
+                        <img src="{{ review_avatar_urls.0|default:'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&q=85' }}" alt="Андрій М." class="w-14 h-14 rounded-full object-cover flex-shrink-0" loading="lazy">
+                        <div><h4 class="font-semibold text-white">Андрій М.</h4><div class="flex text-sokyra-gold text-sm">★★★★★</div></div>
+                    </div>
+                    <p class="text-sokyra-light/90 leading-relaxed">«АІ підбір зачіски допіг знайти ідеальний стиль! Майстер зробив все ідеально!»</p>
+                </div>
+                <div class="rounded-xl bg-sokyra-card border border-sokyra-border p-8">
+                    <div class="flex items-center gap-4 mb-5">
+                        <img src="{{ review_avatar_urls.1|default:'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&q=85' }}" alt="Олена К." class="w-14 h-14 rounded-full object-cover flex-shrink-0" loading="lazy">
+                        <div><h4 class="font-semibold text-white">Олена К.</h4><div class="flex text-sokyra-gold text-sm">★★★★★</div></div>
+                    </div>
+                    <p class="text-sokyra-light/90 leading-relaxed">«Знайшла майстра за хвилини. Зачіска перевершила очікування. Рекомендую!»</p>
+                </div>
+                <div class="rounded-xl bg-sokyra-card border border-sokyra-border p-8">
+                    <div class="flex items-center gap-4 mb-5">
+                        <img src="{{ review_avatar_urls.2|default:'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=200&q=85' }}" alt="Максим П." class="w-14 h-14 rounded-full object-cover flex-shrink-0" loading="lazy">
+                        <div><h4 class="font-semibold text-white">Максим П.</h4><div class="flex text-sokyra-gold text-sm">★★★★★</div></div>
+                    </div>
+                    <p class="text-sokyra-light/90 leading-relaxed">«AI точно визначив зачіску. Барбер — професіонал. Дуже задоволений!»</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Залишились запитання? (як на Sokyra) -->
+<section class="py-20 sm:py-24 bg-sokyra-dark border-t border-sokyra-border">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+        <h2 class="section-title text-3xl sm:text-4xl text-white mb-4" data-aos="fade-up">Залишились запитання?</h2>
+        <p class="text-sokyra-muted text-lg mb-10" data-aos="fade-up">Почніть з безкоштовного AI підбору зачіски або знайдіть майстра вже сьогодні.</p>
+        <div class="flex flex-wrap justify-center gap-4" data-aos="fade-up">
+            <a href="{% url 'hairstyle_selection' %}" class="btn-sokyra inline-flex items-center gap-2 px-8 py-4 rounded-lg text-base">
+                Підібрати зачіску <i class="fas fa-arrow-right text-sm"></i>
+            </a>
+            <a href="{% url 'find_master' %}" class="btn-outline-sokyra inline-flex items-center gap-2 px-8 py-4 rounded-lg text-base">
+                Знайти майстра
+            </a>
+        </div>
+    </div>
+</section>
+
+<script>
+(function() {
+    var carousel = document.getElementById('carousel');
+    var prev = document.querySelector('.popular-styles-prev');
+    var next = document.querySelector('.popular-styles-next');
+    if (!carousel || !prev || !next) return;
+    var cardWidth = 280;
+    var gap = 20;
+    var step = cardWidth + gap;
+    function updatePrev() {
+        prev.disabled = carousel.scrollLeft <= 2;
+    }
+    prev.addEventListener('click', function() { if (!prev.disabled) carousel.scrollBy({ left: -step, behavior: 'smooth' }); });
+    next.addEventListener('click', function() { carousel.scrollBy({ left: step, behavior: 'smooth' }); });
+    carousel.addEventListener('scroll', updatePrev);
+    updatePrev();
+
+    // Partners carousel
+    var pCarousel = document.getElementById('partnersCarousel');
+    var pPrev = document.querySelector('.partners-prev');
+    var pNext = document.querySelector('.partners-next');
+    if (pCarousel && pPrev && pNext) {
+        var pStep = 320;
+        function updatePPrev() { pPrev.disabled = pCarousel.scrollLeft <= 2; }
+        pPrev.addEventListener('click', function() { pCarousel.scrollBy({ left: -pStep, behavior: 'smooth' }); });
+        pNext.addEventListener('click', function() { pCarousel.scrollBy({ left: pStep, behavior: 'smooth' }); });
+        pCarousel.addEventListener('scroll', updatePPrev);
+        updatePPrev();
+    }
+})();
+</script>
+{% endblock %}
+

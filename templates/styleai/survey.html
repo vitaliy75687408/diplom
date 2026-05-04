@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-[80vh] bg-sokyra-dark py-12 sm:py-16 px-4 sm:px-6">
+    <div class="max-w-2xl mx-auto">
+        <header class="text-center mb-10" data-aos="fade-up">
+            <h1 class="section-title text-2xl sm:text-3xl text-white mb-2">Підбери зачіску під себе</h1>
+            <p class="text-sokyra-muted text-sm">Відповідай на питання — отримай персональні рекомендації.</p>
+        </header>
+
+        <form method="post" class="rounded-2xl bg-sokyra-card border border-sokyra-border p-6 sm:p-8 shadow-2xl" data-aos="fade-up">
+            {% csrf_token %}
+            <div class="space-y-6">
+                <!-- 1. Форма обличчя -->
+                <div class="flex gap-4 items-start">
+                    <span class="flex-shrink-0 w-8 h-8 rounded-lg bg-sokyra-gold/20 text-sokyra-gold flex items-center justify-center text-sm font-bold">1</span>
+                    <span class="flex-shrink-0 w-9 h-9 rounded-lg bg-sokyra-gold/15 text-sokyra-gold flex items-center justify-center"><i class="fas fa-user"></i></span>
+                    <div class="flex-1 min-w-0">
+                        <label class="block text-white font-medium mb-2">Яка форма вашого обличчя?</label>
+                        <select name="face_shape_extra" class="survey-dark-select w-full px-4 py-3 rounded-xl bg-sokyra-darker border border-sokyra-border text-sokyra-light focus:outline-none focus:border-sokyra-gold focus:ring-1 focus:ring-sokyra-gold appearance-none cursor-pointer">
+                            <option value="">Не обрано</option>
+                            <option value="oval">Овальне</option>
+                            <option value="round">Кругле</option>
+                            <option value="square">Квадратне</option>
+                            <option value="oblong">Довге</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 2. Тип волосся -->
+                <div class="flex gap-4 items-start">
+                    <span class="flex-shrink-0 w-8 h-8 rounded-lg bg-sokyra-gold/20 text-sokyra-gold flex items-center justify-center text-sm font-bold">2</span>
+                    <span class="flex-shrink-0 w-9 h-9 rounded-lg bg-sokyra-gold/15 text-sokyra-gold flex items-center justify-center"><i class="fas fa-cut"></i></span>
+                    <div class="flex-1 min-w-0">
+                        <label class="block text-white font-medium mb-2">Який у вас тип волосся?</label>
+                        <select name="hair_type" class="survey-dark-select w-full px-4 py-3 rounded-xl bg-sokyra-darker border border-sokyra-border text-sokyra-light focus:outline-none focus:border-sokyra-gold focus:ring-1 focus:ring-sokyra-gold appearance-none cursor-pointer">
+                            <option value="">Не обрано</option>
+                            <option value="straight">Пряме</option>
+                            <option value="wavy">Хвилясте</option>
+                            <option value="curly">Кучеряве</option>
+                            <option value="coily">Сильно кучеряве</option>
+                            <option value="thin">Тонке</option>
+                            <option value="thick">Густе</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 3. Довжина волосся -->
+                <div class="flex gap-4 items-start">
+                    <span class="flex-shrink-0 w-8 h-8 rounded-lg bg-sokyra-gold/20 text-sokyra-gold flex items-center justify-center text-sm font-bold">3</span>
+                    <span class="flex-shrink-0 w-9 h-9 rounded-lg bg-sokyra-gold/15 text-sokyra-gold flex items-center justify-center"><i class="fas fa-ruler"></i></span>
+                    <div class="flex-1 min-w-0">
+                        <label class="block text-white font-medium mb-2">Якої довжини ваше волосся зараз?</label>
+                        <select name="hair_length_extra" class="survey-dark-select w-full px-4 py-3 rounded-xl bg-sokyra-darker border border-sokyra-border text-sokyra-light focus:outline-none focus:border-sokyra-gold focus:ring-1 focus:ring-sokyra-gold appearance-none cursor-pointer">
+                            <option value="">Не обрано</option>
+                            <option value="short">Коротке</option>
+                            <option value="medium">Середнє</option>
+                            <option value="long">Довге</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 4. Стиль життя -->
+                <div class="flex gap-4 items-start">
+                    <span class="flex-shrink-0 w-8 h-8 rounded-lg bg-sokyra-gold/20 text-sokyra-gold flex items-center justify-center text-sm font-bold">4</span>
+                    <span class="flex-shrink-0 w-9 h-9 rounded-lg bg-sokyra-gold/15 text-sokyra-gold flex items-center justify-center"><i class="fas fa-briefcase"></i></span>
+                    <div class="flex-1 min-w-0">
+                        <label class="block text-white font-medium mb-2">Який у вас стиль життя?</label>
+                        <select name="lifestyle" class="survey-dark-select w-full px-4 py-3 rounded-xl bg-sokyra-darker border border-sokyra-border text-sokyra-light focus:outline-none focus:border-sokyra-gold focus:ring-1 focus:ring-sokyra-gold appearance-none cursor-pointer">
+                            <option value="">Не обрано</option>
+                            <option value="active">Активний (спорт, рух)</option>
+                            <option value="office">Офісний / діловий</option>
+                            <option value="creative">Креативний / творчий</option>
+                            <option value="minimal">Мінімальний догляд</option>
+                            <option value="casual">Повсякденний</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 5. Найважливіше у зачісці -->
+                <div class="flex gap-4 items-start">
+                    <span class="flex-shrink-0 w-8 h-8 rounded-lg bg-sokyra-gold/20 text-sokyra-gold flex items-center justify-center text-sm font-bold">5</span>
+                    <span class="flex-shrink-0 w-9 h-9 rounded-lg bg-sokyra-gold/15 text-sokyra-gold flex items-center justify-center"><i class="fas fa-star"></i></span>
+                    <div class="flex-1 min-w-0">
+                        <label class="block text-white font-medium mb-2">Що для вас найважливіше у зачісці?</label>
+                        <select name="priority_extra" class="survey-dark-select w-full px-4 py-3 rounded-xl bg-sokyra-darker border border-sokyra-border text-sokyra-light focus:outline-none focus:border-sokyra-gold focus:ring-1 focus:ring-sokyra-gold appearance-none cursor-pointer">
+                            <option value="">Не обрано</option>
+                            <option value="style">Стиль та зовнішній вигляд</option>
+                            <option value="practical">Практичність</option>
+                            <option value="low_care">Мінімум догляду</option>
+                            <option value="volume">Об'єм</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 6. Час на догляд -->
+                <div class="flex gap-4 items-start">
+                    <span class="flex-shrink-0 w-8 h-8 rounded-lg bg-sokyra-gold/20 text-sokyra-gold flex items-center justify-center text-sm font-bold">6</span>
+                    <span class="flex-shrink-0 w-9 h-9 rounded-lg bg-sokyra-gold/15 text-sokyra-gold flex items-center justify-center"><i class="fas fa-clock"></i></span>
+                    <div class="flex-1 min-w-0">
+                        <label class="block text-white font-medium mb-2">Скільки часу готові приділяти догляду?</label>
+                        <select name="care_time_extra" class="survey-dark-select w-full px-4 py-3 rounded-xl bg-sokyra-darker border border-sokyra-border text-sokyra-light focus:outline-none focus:border-sokyra-gold focus:ring-1 focus:ring-sokyra-gold appearance-none cursor-pointer">
+                            <option value="">Не обрано</option>
+                            <option value="min">Мінімум</option>
+                            <option value="medium">Помірно</option>
+                            <option value="max">Багато</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-sokyra-border">
+                <button type="submit" class="w-full py-4 rounded-xl font-semibold text-sokyra-dark bg-sokyra-gold hover:bg-sokyra-goldLight transition-all flex items-center justify-center gap-2 shadow-lg">
+                    <i class="fas fa-arrow-right text-sm"></i>
+                    Отримати рекомендації
+                </button>
+                <p class="mt-4 text-center">
+                    <a href="{% url 'hairstyle_selection' %}" class="text-sokyra-muted hover:text-sokyra-gold text-sm transition-colors">Пропустити і завантажити фото</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .survey-dark-select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23737373'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1.25rem;
+        padding-right: 2.75rem;
+    }
+    .survey-dark-select:focus {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23c9a227'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    }
+    .survey-dark-select option {
+        background: #141414;
+        color: #e5e5e5;
+    }
+</style>
+<script>
+document.querySelector('form').addEventListener('submit', function() {
+    var notes = [];
+    var face = document.querySelector('[name="face_shape_extra"]');
+    var len = document.querySelector('[name="hair_length_extra"]');
+    var pri = document.querySelector('[name="priority_extra"]');
+    var care = document.querySelector('[name="care_time_extra"]');
+    if (face && face.value) notes.push('Форма обличчя: ' + face.options[face.selectedIndex].text);
+    if (len && len.value) notes.push('Довжина: ' + len.options[len.selectedIndex].text);
+    if (pri && pri.value) notes.push('Найважливіше: ' + pri.options[pri.selectedIndex].text);
+    if (care && care.value) notes.push('Час на догляд: ' + care.options[care.selectedIndex].text);
+    var notesField = document.createElement('input');
+    notesField.type = 'hidden';
+    notesField.name = 'notes';
+    notesField.value = notes.join('. ');
+    this.appendChild(notesField);
+});
+</script>
+{% endblock %}

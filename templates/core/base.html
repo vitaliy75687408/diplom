@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StyleAI — Підбір зачісок за допомогою AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 50: '#f5f3ff', 100: '#ede9fe', 200: '#ddd6fe', 300: '#c4b5fd', 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9', 800: '#5b21b6', 900: '#4c1d95' },
+                        styleai: { purple: '#7c3aed', lavender: '#a78bfa', dark: '#171a2a' }
+                    },
+                    borderRadius: { '32': '32px', '40': '40px' },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col antialiased">
+
+    <!-- Navbar -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center max-w-6xl">
+            <a href="{% url 'home' %}" class="text-xl font-bold flex items-center gap-2 text-gray-800">
+                <span class="w-9 h-9 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white font-black text-sm">K</span>
+                StyleAI
+            </a>
+            <nav class="hidden md:flex gap-8 font-medium text-gray-600">
+                <a href="{% url 'home' %}#features" class="hover:text-primary-600 transition">Можливості</a>
+                <a href="{% url 'home' %}#quiz" class="hover:text-primary-600 transition">Опитування</a>
+                <a href="{% url 'master_list' %}" class="hover:text-primary-600 transition">Майстри</a>
+                <a href="{% url 'home' %}#how-it-works" class="hover:text-primary-600 transition">Як це працює</a>
+            </nav>
+            <div class="flex gap-3">
+                <a href="#" class="px-5 py-2.5 rounded-full font-medium text-primary-600 border border-primary-300 hover:bg-primary-50 transition">Вхід</a>
+                <a href="{% url 'home' %}#quiz" class="px-5 py-2.5 rounded-full font-medium bg-primary-600 text-white hover:bg-primary-700 transition">Розпочати</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer (dark) -->
+    <footer class="bg-[#171a2a] text-white pt-16 pb-8">
+        <div class="container mx-auto px-6 max-w-6xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <a href="{% url 'home' %}" class="flex items-center gap-2 text-xl font-bold mb-4">
+                        <span class="w-9 h-9 rounded-lg bg-primary-500 flex items-center justify-center text-white font-black text-sm">K</span>
+                        StyleAI
+                    </a>
+                    <p class="text-gray-400 text-sm leading-relaxed">Інноваційна платформа для підбору зачісок за допомогою штучного інтелекту</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Продукт</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="{% url 'home' %}#features" class="hover:text-white transition">Можливості</a></li>
+                        <li><a href="#" class="hover:text-white transition">Ціни</a></li>
+                        <li><a href="{% url 'master_list' %}" class="hover:text-white transition">Для майстрів</a></li>
+                        <li><a href="#" class="hover:text-white transition">API</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Компанія</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Про нас</a></li>
+                        <li><a href="#" class="hover:text-white transition">Блог</a></li>
+                        <li><a href="#" class="hover:text-white transition">Кар'єра</a></li>
+                        <li><a href="#" class="hover:text-white transition">Контакти</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Соціальні мережі</h4>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-600 transition" aria-label="Instagram">📷</a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-600 transition" aria-label="Facebook">f</a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-600 transition" aria-label="YouTube">▶</a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary-600 transition" aria-label="TikTok">♪</a>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-gray-700 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500">
+                <span>© 2024 StyleAI. Всі права захищені.</span>
+                <div class="flex gap-6">
+                    <a href="#" class="hover:text-white transition">Політика конфіденційності</a>
+                    <a href="#" class="hover:text-white transition">Умови використання</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

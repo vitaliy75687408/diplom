@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Завантаження фото зачісок</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f0f13;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+  }
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #a78bfa, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  p.sub { color: #9ca3af; margin-bottom: 40px; font-size: 0.95rem; }
+  .card {
+    background: #1a1a24;
+    border: 1px solid #2d2d3d;
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 560px;
+  }
+  label.field-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #a78bfa;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  select {
+    width: 100%;
+    padding: 12px 16px;
+    background: #0f0f13;
+    border: 1px solid #3d3d5c;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 24px;
+    outline: none;
+    cursor: pointer;
+  }
+  select:focus { border-color: #a78bfa; }
+
+  .drop-zone {
+    border: 2px dashed #3d3d5c;
+    border-radius: 16px;
+    padding: 50px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    margin-bottom: 24px;
+  }
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: #a78bfa;
+    background: rgba(167,139,250,0.05);
+  }
+  .drop-zone input[type=file] {
+    position: absolute; inset: 0;
+    opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+  .drop-zone .icon { font-size: 3rem; margin-bottom: 12px; }
+  .drop-zone .hint { color: #6b7280; font-size: 0.9rem; }
+  .drop-zone .hint span { color: #a78bfa; text-decoration: underline; }
+
+  #preview-wrap { display: none; margin-bottom: 24px; text-align: center; }
+  #preview-wrap img {
+    max-height: 280px;
+    border-radius: 12px;
+    border: 2px solid #a78bfa44;
+    object-fit: cover;
+  }
+  #preview-name { margin-top: 8px; color: #9ca3af; font-size: 0.85rem; }
+
+  .btn-upload {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #a78bfa, #818cf8);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .btn-upload:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-upload:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .msg {
+    margin-top: 20px;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    display: none;
+  }
+  .msg.success { background: #14532d33; border: 1px solid #22c55e55; color: #4ade80; display: block; }
+  .msg.error   { background: #7f1d1d33; border: 1px solid #ef444455; color: #f87171; display: block; }
+
+  .uploaded-list { margin-top: 32px; width: 100%; max-width: 560px; }
+  .uploaded-list h2 { font-size: 1.1rem; color: #9ca3af; margin-bottom: 16px; }
+  .style-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+  }
+  .style-card {
+    background: #1a1a24;
+    border: 1px solid #2d2d3d;
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 0.8rem;
+    text-align: center;
+  }
+  .style-card img { width: 100%; height: 100px; object-fit: cover; }
+  .style-card .sname {
+    padding: 6px 4px;
+    color: #d1d5db;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .style-card.done .sname { color: #4ade80; }
+  .style-card.todo .sname { color: #6b7280; }
+</style>
+</head>
+<body>
+
+<h1>📸 Завантаження фото зачісок</h1>
+<p class="sub">Оберіть зачіску, завантажте фото — і воно з'явиться на сайті</p>
+
+<div class="card">
+  <label class="field-label">Назва зачіски</label>
+  <select id="hairstyle-select">
+    <option value="">— оберіть зачіску —</option>
+    <optgroup label="Чоловічі">
+      <option value="Drop Fade">Drop Fade</option>
+      <option value="Taper Fade">Taper Fade</option>
+      <option value="Low Fade">Low Fade</option>
+      <option value="Mid Fade">Mid Fade</option>
+      <option value="High Fade">High Fade</option>
+      <option value="Skin Fade">Skin Fade</option>
+      <option value="Textured Crop">Textured Crop</option>
+      <option value="Burst Fade">Burst Fade</option>
+      <option value="Edgar Cut">Edgar Cut</option>
+      <option value="Slick Back">Slick Back</option>
+      <option value="Pompadour">Pompadour</option>
+      <option value="Quiff">Quiff</option>
+      <option value="Brush Up Fade">Brush Up Fade</option>
+      <option value="Undercut">Undercut</option>
+      <option value="Faux Hawk">Faux Hawk</option>
+      <option value="Crew Cut">Crew Cut</option>
+      <option value="Buzz Cut">Buzz Cut</option>
+      <option value="Long Wavy Hair">Long Wavy Hair</option>
+      <option value="Mod Cut">Mod Cut</option>
+    </optgroup>
+    <optgroup label="Жіночі">
+      <option value="Bob">Bob</option>
+      <option value="Pixie Cut">Pixie Cut</option>
+      <option value="Каре">Каре</option>
+      <option value="Піксі">Піксі</option>
+      <option value="Кучерявий Боб">Кучерявий Боб</option>
+      <option value="Гарсон">Гарсон</option>
+      <option value="Сесон">Сесон</option>
+      <option value="Їжачок">Їжачок</option>
+      <option value="Шеггі">Шеггі</option>
+    </optgroup>
+  </select>
+
+  <label class="field-label">Фото зачіски</label>
+  <div class="drop-zone" id="drop-zone">
+    <input type="file" id="file-input" accept="image/*">
+    <div class="icon">🖼️</div>
+    <p>Перетягніть фото сюди</p>
+    <p class="hint">або <span>натисніть щоб обрати файл</span></p>
+  </div>
+
+  <div id="preview-wrap">
+    <img id="preview-img" src="" alt="Preview">
+    <p id="preview-name"></p>
+  </div>
+
+  <button class="btn-upload" id="btn-upload" disabled>⬆️ Завантажити</button>
+  <div class="msg" id="msg"></div>
+</div>
+
+<div class="uploaded-list">
+  <h2>Статус зачісок:</h2>
+  <div class="style-grid" id="style-grid"></div>
+</div>
+
+<script>
+const HAIRSTYLES = [
+  'Drop Fade','Taper Fade','Low Fade','Mid Fade','High Fade','Skin Fade',
+  'Textured Crop','Burst Fade','Edgar Cut','Slick Back','Pompadour','Quiff',
+  'Brush Up Fade','Undercut','Faux Hawk','Crew Cut','Buzz Cut','Long Wavy Hair',
+  'Mod Cut','Bob','Pixie Cut','Каре','Піксі','Кучерявий Боб','Гарсон','Сесон',
+  'Їжачок','Шеггі'
+];
+
+const dropZone = document.getElementById('drop-zone');
+const fileInput = document.getElementById('file-input');
+const previewWrap = document.getElementById('preview-wrap');
+const previewImg = document.getElementById('preview-img');
+const previewName = document.getElementById('preview-name');
+const btnUpload = document.getElementById('btn-upload');
+const msgEl = document.getElementById('msg');
+const selectEl = document.getElementById('hairstyle-select');
+const grid = document.getElementById('style-grid');
+
+let selectedFile = null;
+
+// Drag-and-drop
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) handleFile(file);
+});
+fileInput.addEventListener('change', () => {
+  if (fileInput.files[0]) handleFile(fileInput.files[0]);
+});
+
+function handleFile(file) {
+  selectedFile = file;
+  previewName.textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = e => {
+    previewImg.src = e.target.result;
+    previewWrap.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+  updateBtn();
+}
+
+selectEl.addEventListener('change', updateBtn);
+function updateBtn() {
+  btnUpload.disabled = !(selectedFile && selectEl.value);
+}
+
+btnUpload.addEventListener('click', async () => {
+  if (!selectedFile || !selectEl.value) return;
+  btnUpload.disabled = true;
+  btnUpload.textContent = '⏳ Завантаження...';
+  msgEl.className = 'msg';
+  msgEl.textContent = '';
+
+  const fd = new FormData();
+  fd.append('image', selectedFile);
+  fd.append('hairstyle_name', selectEl.value);
+  fd.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+
+  try {
+    const res = await fetch('/upload-hairstyle-image/', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (data.success) {
+      msgEl.className = 'msg success';
+      msgEl.textContent = `✅ Фото для «${selectEl.value}» успішно завантажено!`;
+      loadStatus();
+      selectedFile = null;
+      previewWrap.style.display = 'none';
+      fileInput.value = '';
+      selectEl.value = '';
+    } else {
+      msgEl.className = 'msg error';
+      msgEl.textContent = '❌ Помилка: ' + (data.error || 'невідома');
+    }
+  } catch(e) {
+    msgEl.className = 'msg error';
+    msgEl.textContent = '❌ Мережева помилка';
+  }
+
+  btnUpload.textContent = '⬆️ Завантажити';
+  updateBtn();
+});
+
+function getCookie(name) {
+  const m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return m ? m.pop() : '';
+}
+
+async function loadStatus() {
+  try {
+    const res = await fetch('/upload-hairstyle-image/status/');
+    const data = await res.json();
+    renderGrid(data.uploaded || []);
+  } catch { renderGrid([]); }
+}
+
+function renderGrid(uploaded) {
+  const uploadedSet = new Set(uploaded.map(u => u.name));
+  grid.innerHTML = HAIRSTYLES.map(name => {
+    const item = uploaded.find(u => u.name === name);
+    const isDone = !!item;
+    return `<div class="style-card ${isDone ? 'done' : 'todo'}">
+      ${isDone
+        ? `<img src="${item.url}" alt="${name}" onerror="this.style.display='none'">`
+        : `<div style="height:100px;display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:0.2">?</div>`}
+      <div class="sname">${isDone ? '✓ ' : ''}${name}</div>
+    </div>`;
+  }).join('');
+}
+
+loadStatus();
+</script>
+</body>
+</html>

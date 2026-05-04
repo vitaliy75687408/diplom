@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+    <header class="text-center mb-16" data-aos="fade-up">
+        <h1 class="section-title text-3xl sm:text-4xl lg:text-5xl text-white mb-4">Про нас</h1>
+        <p class="text-sokyra-muted text-lg sm:text-xl max-w-2xl mx-auto">StyleAI — сучасна платформа для персонального підбору зачіски та пошуку перевірених майстрів у вашому місті</p>
+    </header>
+
+    <section class="rounded-xl bg-sokyra-card border border-sokyra-border p-8 sm:p-10 mb-10" data-aos="fade-up">
+        <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+            <span class="w-10 h-10 rounded-lg bg-sokyra-gold/20 text-sokyra-gold flex items-center justify-center"><i class="fas fa-bullseye"></i></span>
+            Наша місія
+        </h2>
+        <p class="text-sokyra-light/90 leading-relaxed mb-4">Ми віримо, що кожен заслуговує на ідеальну стрижку — ту, що підкреслює індивідуальність і підходить саме вам. StyleAI об’єднує технології та експертизу: допомагає обрати стиль за формою обличчя та побажаннями і з’єднує з професійними перукарями та барберами, які цей стиль вміють створити.</p>
+        <p class="text-sokyra-light/90 leading-relaxed">Наша мета — зробити пошук свого образу простим, швидким і приємним.</p>
+    </section>
+
+    <section class="rounded-xl bg-sokyra-card border border-sokyra-border p-8 sm:p-10 mb-10" data-aos="fade-up">
+        <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+            <span class="w-10 h-10 rounded-lg bg-sokyra-gold/20 text-sokyra-gold flex items-center justify-center"><i class="fas fa-magic"></i></span>
+            Як це працює
+        </h2>
+        <ul class="space-y-4 text-sokyra-light/90 leading-relaxed">
+            <li class="flex gap-3"><span class="text-sokyra-gold font-semibold shrink-0">1.</span> <strong class="text-white">Опитування.</strong> Коротке питання про тип волосся, стиль життя та побажання — щоб рекомендації були максимально релевантними.</li>
+            <li class="flex gap-3"><span class="text-sokyra-gold font-semibold shrink-0">2.</span> <strong class="text-white">Фото та аналіз.</strong> Завантажте фото обличчя. Система аналізує форму обличчя і підбирає стрижки, які вам підходять.</li>
+            <li class="flex gap-3"><span class="text-sokyra-gold font-semibold shrink-0">3.</span> <strong class="text-white">Рекомендації.</strong> Ви отримуєте персональний список зачісок з поясненнями та рівнем впевненості.</li>
+            <li class="flex gap-3"><span class="text-sokyra-gold font-semibold shrink-0">4.</span> <strong class="text-white">Запис до майстра.</strong> Обираєте стрижку — бачите майстрів, які її виконують, їхні портфоліо та вільні слоти для запису.</li>
+        </ul>
+    </section>
+
+    <section class="rounded-xl bg-sokyra-card border border-sokyra-border p-8 sm:p-10 mb-10" data-aos="fade-up">
+        <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+            <span class="w-10 h-10 rounded-lg bg-sokyra-gold/20 text-sokyra-gold flex items-center justify-center"><i class="fas fa-gem"></i></span>
+            Чому StyleAI
+        </h2>
+        <div class="grid sm:grid-cols-2 gap-6">
+            <div class="flex gap-3">
+                <i class="fas fa-check-circle text-sokyra-gold mt-0.5 shrink-0"></i>
+                <div><strong class="text-white">Персональний підбір.</strong> Ураховуємо форму обличчя та ваші відповіді з опитування.</div>
+            </div>
+            <div class="flex gap-3">
+                <i class="fas fa-check-circle text-sokyra-gold mt-0.5 shrink-0"></i>
+                <div><strong class="text-white">Перевірені майстри.</strong> Фільтр за типом стрижки, рейтинг, портфоліо та відгуки.</div>
+            </div>
+            <div class="flex gap-3">
+                <i class="fas fa-check-circle text-sokyra-gold mt-0.5 shrink-0"></i>
+                <div><strong class="text-white">Зручний запис.</strong> Вибір дати, часу та ціни в кілька кліків.</div>
+            </div>
+            <div class="flex gap-3">
+                <i class="fas fa-check-circle text-sokyra-gold mt-0.5 shrink-0"></i>
+                <div><strong class="text-white">Без зайвої реклами.</strong> Показуємо лише те, що відповідає вашому вибору.</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="text-center pt-6" data-aos="fade-up">
+        <p class="text-sokyra-muted text-sm">StyleAI © 2026. Платформа для підбору зачіски та пошуку майстрів.</p>
+        <div class="mt-4 flex justify-center gap-6">
+            <a href="{% url 'hairstyle_selection' %}" class="text-sokyra-gold hover:text-sokyra-goldLight transition-colors text-sm font-medium">Підбір зачіски</a>
+            <a href="{% url 'find_master' %}" class="text-sokyra-gold hover:text-sokyra-goldLight transition-colors text-sm font-medium">Майстри</a>
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+    <h1 class="section-title text-3xl text-white mb-2 text-center">Записатись до майстра</h1>
+    <p class="text-sokyra-muted text-center mb-10">Оберіть тип стрижки, майстра, зручну дату та час. Кожен майстер прив’язаний до конкретних послуг.</p>
+
+    <!-- Крок 1: Тип стрижки -->
+    <div id="step1" class="booking-step rounded-xl bg-sokyra-card border border-sokyra-border p-6 sm:p-8 mb-6">
+        <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <span class="w-8 h-8 rounded-full bg-sokyra-gold/20 text-sokyra-gold flex items-center justify-center text-sm font-bold">1</span>
+            Оберіть тип стрижки
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {% for style in popular_styles %}
+            <button type="button" class="booking-style-btn rounded-xl border border-sokyra-border bg-sokyra-dark py-3 px-4 text-left text-white hover:border-sokyra-gold/50 hover:bg-sokyra-gold/10 transition-colors text-sm font-medium" data-style-id="{{ style.id }}" data-style-name="{{ style.name }}">
+                {{ style.name }}
+            </button>
+            {% empty %}
+            <p class="col-span-full text-sokyra-muted">Зачіски не завантажені.</p>
+            {% endfor %}
+        </div>
+        <p id="step1Hint" class="text-sokyra-muted text-sm mt-3 hidden">Обрано: <strong id="selectedStyleName" class="text-sokyra-gold"></strong></p>
+    </div>
+
+    <!-- Крок 2: Майстри -->
+    <div id="step2" class="booking-step rounded-xl bg-sokyra-card border border-sokyra-border p-6 sm:p-8 mb-6 hidden">
+        <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <span class="w-8 h-8 rounded-full bg-sokyra-gold/20 text-sokyra-gold flex items-center justify-center text-sm font-bold">2</span>
+            Оберіть майстра
+        </h2>
+        <p class="text-sokyra-muted text-sm mb-3">Показані лише майстри, прив’язані до обраної послуги.</p>
+        <div id="mastersList" class="space-y-3">
+            <p class="text-sokyra-muted">Спочатку оберіть тип стрижки.</p>
+        </div>
+    </div>
+
+    <!-- Крок 3: Дата і час -->
+    <div id="step3" class="booking-step rounded-xl bg-sokyra-card border border-sokyra-border p-6 sm:p-8 mb-6 hidden">
+        <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <span class="w-8 h-8 rounded-full bg-sokyra-gold/20 text-sokyra-gold flex items-center justify-center text-sm font-bold">3</span>
+            Дата та час
+        </h2>
+        <p class="text-sokyra-muted text-sm mb-3">Оберіть дату</p>
+        <div id="datesRow" class="flex gap-2 overflow-x-auto pb-2 mb-4"></div>
+        <p class="text-sokyra-muted text-sm mb-3">Оберіть час</p>
+        <div id="slotsRow" class="flex flex-wrap gap-2">
+            <span class="text-sokyra-muted">Спочатку оберіть дату.</span>
+        </div>
+    </div>
+
+    <!-- Крок 4: Підтвердження і дані -->
+    <div id="step4" class="booking-step rounded-xl bg-sokyra-card border border-sokyra-border p-6 sm:p-8 mb-6 hidden">
+        <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <span class="w-8 h-8 rounded-full bg-sokyra-gold/20 text-sokyra-gold flex items-center justify-center text-sm font-bold">4</span>
+            Підтвердження запису
+        </h2>
+        <div id="summary" class="rounded-xl bg-sokyra-dark border border-sokyra-border p-4 mb-6 text-sm">
+            <p class="text-sokyra-muted">Майстер: <span id="sumMaster" class="text-white"></span></p>
+            <p class="text-sokyra-muted mt-1">Стрижка: <span id="sumStyle" class="text-white"></span></p>
+            <p class="text-sokyra-muted mt-1">Дата: <span id="sumDate" class="text-white"></span>, <span id="sumTime" class="text-white"></span></p>
+            <p class="text-sokyra-gold font-semibold mt-2">Ціна: <span id="sumPrice">—</span> грн</p>
+        </div>
+        <form id="bookingForm" class="space-y-4">
+            {% csrf_token %}
+            <input type="hidden" name="master_id" id="formMasterId">
+            <input type="hidden" name="hairstyle_id" id="formHairstyleId">
+            <input type="hidden" name="date" id="formDate">
+            <input type="hidden" name="time_slot" id="formTimeSlot">
+            <div>
+                <label for="client_name" class="block text-sokyra-muted text-sm mb-1">Ваше ім'я *</label>
+                <input type="text" name="client_name" id="client_name" required class="w-full px-4 py-3 rounded-xl border border-sokyra-border bg-sokyra-dark text-white placeholder-sokyra-muted focus:outline-none focus:border-sokyra-gold" placeholder="Іван">
+            </div>
+            <div>
+                <label for="client_phone" class="block text-sokyra-muted text-sm mb-1">Телефон *</label>
+                <input type="tel" name="client_phone" id="client_phone" required class="w-full px-4 py-3 rounded-xl border border-sokyra-border bg-sokyra-dark text-white placeholder-sokyra-muted focus:outline-none focus:border-sokyra-gold" placeholder="+38 0XX XXX XX XX">
+            </div>
+            <div>
+                <label for="client_chat_id" class="block text-sokyra-muted text-sm mb-1">Telegram Chat ID (для підтвердження)</label>
+                <input type="number" name="client_chat_id" id="client_chat_id" class="w-full px-4 py-3 rounded-xl border border-sokyra-border bg-sokyra-dark text-white placeholder-sokyra-muted focus:outline-none focus:border-sokyra-gold" placeholder="123456789">
+                <p class="text-xs text-sokyra-muted mt-1">Необов'язково. Якщо вкажете, ми надішлемо вам підтвердження в Telegram.</p>
+            </div>
+            <button type="submit" class="btn-sokyra w-full py-4 rounded-xl font-semibold text-sokyra-dark">
+                Підтвердити запис
+            </button>
+        </form>
+        <div id="bookingSuccess" class="hidden mt-4 p-4 rounded-xl bg-green-900/30 border border-green-600/50 text-green-200">
+            <p id="successMessage"></p>
+            <a href="{% url 'find_master' %}" class="text-sokyra-gold hover:underline mt-2 inline-block">Повернутись до майстрів</a>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]') && document.querySelector('[name=csrfmiddlewaretoken]').value;
+    var preSelectMasterId = '{{ pre_select_master_id|escapejs }}';
+    var state = {
+        styleId: null,
+        styleName: null,
+        masterId: null,
+        masterName: null,
+        masterPrice: null,
+        date: null,
+        timeSlot: null
+    };
+
+    function showStep(stepNum) {
+        document.querySelectorAll('.booking-step').forEach(function(el) {
+            el.classList.add('hidden');
+            var n = parseInt(el.id.replace('step', ''), 10);
+            if (n === stepNum) el.classList.remove('hidden');
+        });
+    }
+
+    document.querySelectorAll('.booking-style-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.booking-style-btn').forEach(function(b) { b.classList.remove('border-sokyra-gold', 'bg-sokyra-gold/20'); });
+            btn.classList.add('border-sokyra-gold', 'bg-sokyra-gold/20');
+            state.styleId = btn.dataset.styleId;
+            state.styleName = btn.dataset.styleName;
+            document.getElementById('selectedStyleName').textContent = state.styleName;
+            document.getElementById('step1Hint').classList.remove('hidden');
+            // Завантажити майстрів
+            fetch('{% url "booking_api_masters" %}?style_id=' + encodeURIComponent(state.styleId))
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    var list = document.getElementById('mastersList');
+                    if (!data.masters || data.masters.length === 0) {
+                        list.innerHTML = '<p class="text-sokyra-muted">Майстрів з цією стрижкою не знайдено.</p>';
+                        return;
+                    }
+                    list.innerHTML = data.masters.map(function(m) {
+                        var priceStr = m.price ? m.price + ' грн' : 'за домовленістю';
+                        var selected = preSelectMasterId && m.id == preSelectMasterId ? ' border-sokyra-gold bg-sokyra-gold/20' : '';
+                        return '<button type="button" class="master-btn w-full rounded-xl border border-sokyra-border bg-sokyra-dark p-4 text-left hover:border-sokyra-gold/50 transition-colors' + selected + '" data-master-id="' + m.id + '" data-master-name="' + (m.name || '') + '" data-master-price="' + (m.price || '') + '">' +
+                            '<span class="font-semibold text-white">' + (m.name || '') + '</span>' +
+                            '<span class="text-sokyra-muted text-sm block">' + (m.profession || '') + ' · ' + (m.rating || '') + '</span>' +
+                            '<span class="text-sokyra-gold text-sm">' + priceStr + '</span>' +
+                            '</button>';
+                    }).join('');
+                    list.querySelectorAll('.master-btn').forEach(function(b) {
+                        b.addEventListener('click', onMasterSelect);
+                    });
+                });
+        });
+    });
+
+    function onMasterSelect() {
+        document.querySelectorAll('.master-btn').forEach(function(b) { b.classList.remove('border-sokyra-gold', 'bg-sokyra-gold/20'); });
+        this.classList.add('border-sokyra-gold', 'bg-sokyra-gold/20');
+        state.masterId = this.dataset.masterId;
+        state.masterName = this.dataset.masterName;
+        state.masterPrice = this.dataset.masterPrice || null;
+        showStep(3);
+        loadDates();
+    }
+
+    function loadDates() {
+        fetch('{% url "booking_api_dates" %}?master_id=' + encodeURIComponent(state.masterId))
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                var row = document.getElementById('datesRow');
+                row.innerHTML = (data.dates || []).map(function(d) {
+                    var day = new Date(d);
+                    var label = day.toLocaleDateString('uk-UA', { day: 'numeric', month: 'short' });
+                    return '<button type="button" class="date-btn flex-shrink-0 px-4 py-2 rounded-xl border border-sokyra-border bg-sokyra-dark text-white text-sm hover:border-sokyra-gold/50" data-date="' + d + '">' + label + '</button>';
+                }).join('');
+                row.querySelectorAll('.date-btn').forEach(function(b) {
+                    b.addEventListener('click', onDateSelect);
+                });
+                document.getElementById('slotsRow').innerHTML = '<span class="text-sokyra-muted">Оберіть дату.</span>';
+            });
+    }
+
+    function onDateSelect() {
+        document.querySelectorAll('.date-btn').forEach(function(b) { b.classList.remove('border-sokyra-gold', 'bg-sokyra-gold/20'); });
+        this.classList.add('border-sokyra-gold', 'bg-sokyra-gold/20');
+        state.date = this.dataset.date;
+        fetch('{% url "booking_api_slots" %}?master_id=' + encodeURIComponent(state.masterId) + '&date=' + encodeURIComponent(state.date))
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                var row = document.getElementById('slotsRow');
+                if (!data.slots || data.slots.length === 0) {
+                    row.innerHTML = '<span class="text-sokyra-muted">Вільних слотів немає.</span>';
+                    return;
+                }
+                row.innerHTML = data.slots.map(function(s) {
+                    return '<button type="button" class="slot-btn px-4 py-2 rounded-xl border border-sokyra-border bg-sokyra-dark text-white text-sm hover:border-sokyra-gold/50" data-slot="' + s + '">' + s + '</button>';
+                }).join('');
+                row.querySelectorAll('.slot-btn').forEach(function(b) {
+                    b.addEventListener('click', onSlotSelect);
+                });
+            });
+    }
+
+    function onSlotSelect() {
+        document.querySelectorAll('.slot-btn').forEach(function(b) { b.classList.remove('border-sokyra-gold', 'bg-sokyra-gold/20'); });
+        this.classList.add('border-sokyra-gold', 'bg-sokyra-gold/20');
+        state.timeSlot = this.dataset.slot;
+        showStep(4);
+        var d = new Date(state.date);
+        document.getElementById('sumMaster').textContent = state.masterName || '';
+        document.getElementById('sumStyle').textContent = state.styleName || '';
+        document.getElementById('sumDate').textContent = d.toLocaleDateString('uk-UA');
+        document.getElementById('sumTime').textContent = state.timeSlot || '';
+        document.getElementById('sumPrice').textContent = state.masterPrice || 'за домовленістю';
+        document.getElementById('formMasterId').value = state.masterId || '';
+        document.getElementById('formHairstyleId').value = state.styleId || '';
+        document.getElementById('formDate').value = state.date || '';
+        document.getElementById('formTimeSlot').value = state.timeSlot || '';
+    }
+
+    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var form = e.target;
+        var fd = new FormData(form);
+        fd.append('csrfmiddlewaretoken', csrfToken);
+        fetch('{% url "booking_create" %}', {
+            method: 'POST',
+            body: fd,
+            headers: { 'X-CSRFToken': csrfToken }
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                form.classList.add('hidden');
+                document.getElementById('bookingSuccess').classList.remove('hidden');
+                document.getElementById('successMessage').textContent = data.message || 'Запис створено.';
+            } else {
+                alert(data.error || 'Помилка запису');
+            }
+        })
+        .catch(function() { alert('Помилка мережі'); });
+    });
+})();
+</script>
+{% endblock %}

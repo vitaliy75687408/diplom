@@ -1,0 +1,54 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container" style="padding-top: 40px;">
+    <h2>Рекомендовані стрижки</h2>
+    <p>На основі твого типу обличчя ({{ user_data.face_shape|title }}) та волосся ({{ user_data.hair_type|title }})</p>
+
+    <div class="results-grid">
+        {% for service in services %}
+        <div class="card">
+            {% if service.photo %}
+            <img src="{{ service.photo.url }}" alt="{{ service.name }}">
+            {% else %}
+            <div style="height: 250px; background: #333; display: flex; align-items: center; justify-content: center;">
+                Фото</div>
+            {% endif %}
+            <div class="card-body">
+                <h3 class="card-title">{{ service.name }}</h3>
+                <p>{{ service.description|truncatechars:100 }}</p>
+                <div class="price">{{ service.price }} грн</div>
+            </div>
+        </div>
+        {% empty %}
+        <p>На жаль, за точним збігом нічого не знайдено. Спробуйте змінити параметри.</p>
+        {% endfor %}
+    </div>
+
+    <h2 style="margin-top: 60px;">Топ Майстрів</h2>
+    <div class="results-grid">
+        {% for master in masters %}
+        <div class="card">
+            {% if master.photo %}
+            <img src="{{ master.photo.url }}" alt="{{ master.name }}">
+            {% else %}
+            <div style="height: 250px; background: #333; display: flex; align-items: center; justify-content: center;">
+                Фото</div>
+            {% endif %}
+            <div class="card-body">
+                <div class="rating">★ {{ master.rating }}</div>
+                <h3 class="card-title">{{ master.name }}</h3>
+                <p>{{ master.experience }}</p>
+                <div class="tags">
+                    <!-- Simple parsing of comma tags -->
+                    <span class="tag-purple">Top Rated</span>
+                    <span class="tag-blue">{{ master.tags }}</span>
+                </div>
+                <a href="#" class="btn-primary"
+                    style="margin-top: 15px; width: 100%; text-align: center;">Записатись</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

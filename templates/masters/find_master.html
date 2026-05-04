@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+    <div class="text-center mb-10" data-aos="fade-up">
+        <h1 class="section-title text-3xl sm:text-4xl text-white mb-2">Знайдіть свого майстра</h1>
+        {% if style_query %}
+        <p class="text-sokyra-muted text-lg">Майстри, які роблять зачіску <strong class="text-sokyra-gold">«{{ style_query }}»</strong></p>
+        <p class="text-sokyra-muted text-sm mt-1"><a href="{% url 'find_master' %}{% if name_query %}?name={{ name_query|urlencode }}{% endif %}{% if city_query %}{% if name_query %}&amp;{% else %}?{% endif %}city={{ city_query|urlencode }}{% endif %}" class="text-sokyra-gold hover:underline">Показати всіх майстрів</a></p>
+        {% else %}
+        <p class="text-sokyra-muted text-lg">Професійні перукарі та барбери у вашому місті</p>
+        {% endif %}
+    </div>
+
+    <div class="rounded-2xl p-6 sm:p-8 mb-10 relative" data-aos="fade-up" style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);">
+        <form id="searchMastersForm" method="get" action="{% url 'find_master' %}" class="flex flex-col lg:flex-row gap-4 items-center relative z-50 w-full">
+            <div class="w-full lg:flex-1 relative">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sokyra-muted"><i class="fas fa-search pt-0.5"></i></span>
+                <input type="text" name="name" id="searchName" value="{{ name_query }}" placeholder="Пошук за ім'ям або стилем" class="w-full pl-11 pr-4 rounded-xl border border-white/20 bg-white/5 text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-sokyra-gold focus:shadow-[0_0_0_1px_#c9a227] transition-all h-14 font-medium appearance-none">
+            </div>
+            <div class="w-full lg:flex-1 relative">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sokyra-muted"><i class="fas fa-map-marker-alt pt-0.5"></i></span>
+                <input type="text" name="city" id="searchCity" value="{{ city_query }}" placeholder="Місто або район" class="w-full pl-11 pr-4 rounded-xl border border-white/20 bg-white/5 text-[#E0E0E0] placeholder-[#888888] focus:outline-none focus:border-sokyra-gold focus:shadow-[0_0_0_1px_#c9a227] transition-all h-14 font-medium appearance-none">
+            </div>
+            <div class="w-full lg:w-48 relative custom-select" data-target="searchCategoryInput">
+                <input type="hidden" name="category" id="searchCategoryInput" value="{{ category_query }}">
+                <button type="button" class="w-full flex items-center justify-between px-4 rounded-xl border border-white/20 bg-white/5 text-[#E0E0E0] focus:outline-none focus:border-sokyra-gold transition-all h-14 font-medium text-left">
+                    <span class="truncate selected-text">Усі категорії</span>
+                    <i class="fas fa-chevron-down text-xs text-sokyra-muted ml-2"></i>
+                </button>
+                <div class="absolute z-50 left-0 right-0 top-full mt-2 rounded-xl border border-white/10 bg-[#141414] shadow-2xl opacity-0 invisible translate-y-[-10px] transition-all duration-200 dropdown-menu max-h-60 overflow-y-auto">
+                    <div class="p-2 space-y-1">
+                        <div class="select-option px-3 py-2 rounded-lg text-[#E0E0E0] hover:bg-[#e5e5e5] hover:text-sokyra-darker transition-colors cursor-pointer text-sm font-semibold" data-value="" data-label="Усі категорії">Усі категорії</div>
+                        {% for key, label in category_labels.items %}
+                        <div class="select-option px-3 py-2 rounded-lg text-[#E0E0E0] hover:bg-[#e5e5e5] hover:text-sokyra-darker transition-colors cursor-pointer text-sm font-semibold" data-value="{{ key }}" data-label="{{ label }}">{{ label }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="w-full lg:w-64 relative custom-select" data-target="searchStyleIdInput">
+                <input type="hidden" name="style_id" id="searchStyleIdInput" value="{{ style_id_int|default_if_none:'' }}">
+                <button type="button" class="w-full flex items-center justify-between px-4 rounded-xl border border-white/20 bg-white/5 text-[#E0E0E0] focus:outline-none focus:border-sokyra-gold transition-all h-14 font-medium text-left">
+                    <span class="truncate selected-text">Усі типи стрижок</span>
+                    <i class="fas fa-chevron-down text-xs text-sokyra-muted ml-2"></i>
+                </button>
+                <div class="absolute z-50 left-0 right-0 top-full mt-2 rounded-xl border border-white/10 bg-[#141414] shadow-2xl opacity-0 invisible translate-y-[-10px] transition-all duration-200 dropdown-menu max-h-60 overflow-y-auto" style="scrollbar-width: thin;">
+                    <div class="p-2 space-y-1">
+                        <div class="select-option px-3 py-2 rounded-lg text-[#E0E0E0] hover:bg-[#e5e5e5] hover:text-sokyra-darker transition-colors cursor-pointer text-sm font-semibold" data-value="" data-label="Усі типи стрижок">Усі типи стрижок</div>
+                        {% for group_label, styles in style_groups %}
+                        <div class="px-3 py-2 text-[10px] font-bold text-[#888888] uppercase tracking-widest mt-2 mb-1 sticky top-0 bg-[#141414] shadow-[0_4px_6px_-2px_rgba(0,0,0,0.5)] z-20">{{ group_label }}</div>
+                        {% for s in styles %}
+                        <div class="select-option px-3 py-2 rounded-lg text-[#E0E0E0] hover:bg-[#e5e5e5] hover:text-sokyra-darker group transition-colors cursor-pointer text-sm flex flex-col gap-1" data-value="{{ s.id }}" data-label="{{ s.name }}">
+                            <span class="font-semibold">{{ s.name }}</span>
+                            <span class="text-[10px] text-[#A0A0A0] group-hover:text-sokyra-dark/80 transition-colors flex flex-wrap items-center gap-1.5 font-medium">
+                                <span class="bg-white/10 group-hover:bg-sokyra-dark/10 px-1.5 py-0.5 rounded border border-white/5 group-hover:border-sokyra-dark/20 transition-colors flex items-center gap-1">
+                                    <i class="fas fa-cut text-[8px] opacity-70"></i> {{ s.get_category_display }} стрижка
+                                </span>
+                                <span class="bg-white/10 group-hover:bg-sokyra-dark/10 px-1.5 py-0.5 rounded border border-white/5 group-hover:border-sokyra-dark/20 transition-colors flex items-center gap-1">
+                                    <i class="fas fa-ruler-horizontal text-[8px] opacity-70"></i> {{ s.length_label }} довжина
+                                </span>
+                            </span>
+                        </div>
+                        {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="w-full lg:w-auto px-8 rounded-xl h-14 btn-sokyra shrink-0 flex items-center justify-center gap-2">
+                <i class="fas fa-search text-sm"></i> Знайти
+            </button>
+        </form>
+        <div class="mt-8 pt-6 border-t border-white/10 relative z-10">
+            <p class="text-[#E0E0E0] text-sm font-semibold mb-1">Фільтр по типу стрижки (прив’язка майстра до послуги):</p>
+            <p class="text-[#888888] text-xs mb-5">Показуються лише майстри, прив’язані до обраної послуги.</p>
+            {% if popular_style_groups %}
+            {% for group in popular_style_groups %}
+            <p class="text-[rgba(201,162,39,0.9)] uppercase tracking-[0.1em] text-xs font-bold mt-6 mb-3 {% if forloop.first %}mt-0{% endif %}">{{ group.0 }}</p>
+            <div class="flex flex-wrap gap-2.5 mb-2">
+                {% for style in group.1 %}
+                <a href="?style={{ style.name|urlencode }}{% if category_query %}&category={{ category_query }}{% endif %}{% if name_query %}&name={{ name_query|urlencode }}{% endif %}{% if city_query %}&city={{ city_query|urlencode }}{% endif %}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-[12px] text-sm font-medium border border-white/20 bg-transparent text-[#E0E0E0] hover:bg-sokyra-gold hover:text-sokyra-darker hover:border-sokyra-gold transition-all duration-200 hover:shadow-[0_0_15px_rgba(212,175,55,0.3)] group {% if style_query == style.name %}bg-sokyra-gold text-sokyra-darker border-sokyra-gold shadow-[0_0_15px_rgba(212,175,55,0.3)]{% endif %}">
+                    <i class="fas fa-cut text-xs opacity-60 group-hover:opacity-100 transition-opacity {% if style_query == style.name %}opacity-100{% endif %}"></i> {{ style.name }}
+                </a>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="flex flex-wrap gap-2.5">
+                {% for style in popular_styles %}
+                <a href="?style={{ style.name|urlencode }}{% if category_query %}&category={{ category_query }}{% endif %}{% if name_query %}&name={{ name_query|urlencode }}{% endif %}{% if city_query %}&city={{ city_query|urlencode }}{% endif %}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-[12px] text-sm font-medium border border-white/20 bg-transparent text-[#E0E0E0] hover:bg-sokyra-gold hover:text-sokyra-darker hover:border-sokyra-gold transition-all duration-200 hover:shadow-[0_0_15px_rgba(212,175,55,0.3)] group {% if style_query == style.name %}bg-sokyra-gold text-sokyra-darker border-sokyra-gold shadow-[0_0_15px_rgba(212,175,55,0.3)]{% endif %}">
+                    <i class="fas fa-cut text-xs opacity-60 group-hover:opacity-100 transition-opacity {% if style_query == style.name %}opacity-100{% endif %}"></i> {{ style.name }}
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if context_note %}
+    <div class="mb-8 p-4 rounded-xl bg-sokyra-gold/10 border border-sokyra-gold/30 text-sokyra-gold flex items-center gap-3" data-aos="fade-up">
+        <i class="fas fa-info-circle text-lg"></i>
+        <p class="text-sm font-medium">{{ context_note }}</p>
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for master in masters %}
+        <div data-aos="fade-up" class="rounded-xl bg-sokyra-card border border-sokyra-border overflow-hidden hover:border-sokyra-gold/40 transition-colors">
+            <div class="aspect-[4/3] relative overflow-hidden bg-sokyra-darker">
+                {% if master.photo %}
+                <img src="{{ master.photo.url }}" alt="{{ master.full_name }}" class="w-full h-full object-cover">
+                {% else %}
+                <div class="w-full h-full flex items-center justify-center text-sokyra-muted"><i class="fas fa-user text-5xl"></i></div>
+                {% endif %}
+                <div class="absolute top-3 left-3 flex flex-col gap-2">
+                    <div class="px-2.5 py-1 rounded-full bg-sokyra-dark/90 border border-sokyra-border text-sokyra-gold text-sm font-semibold flex items-center gap-1">
+                        <i class="fas fa-star text-xs"></i> {{ master.rating }}
+                    </div>
+                    {% if master.level == 'top' %}
+                    <div class="px-2.5 py-1 rounded-full bg-sokyra-gold/20 border border-sokyra-gold/40 text-sokyra-gold text-[10px] uppercase font-bold tracking-wider flex items-center gap-1">
+                        <i class="fas fa-crown text-[10px]"></i> ТОП
+                    </div>
+                    {% endif %}
+                </div>
+                {% if master.gallery_photos.all %}
+                <div class="absolute bottom-2 left-2 right-2 grid grid-cols-3 gap-1 overflow-hidden rounded-lg">
+                    {% for photo in master.gallery_photos.all|slice:":3" %}
+                    <img src="{{ photo.image.url }}" alt="" class="h-10 w-full object-cover rounded border border-sokyra-border/80 shadow" loading="lazy">
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="p-5">
+                <h3 class="font-bold text-white text-lg"><a href="{% url 'master_detail' master.id %}" class="hover:text-sokyra-gold transition-colors">{{ master.full_name }}</a></h3>
+                <p class="text-sokyra-muted text-sm mt-0.5">{{ master.get_profession_display }} • {{ master.experience_years }} років досвіду</p>
+                {% if master.services.all %}
+                <div class="flex flex-wrap gap-1.5 mt-2">
+                    {% for service in master.services.all %}
+                    <button type="button" 
+                            class="js-booking-open inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-sokyra-dark border border-sokyra-border text-sokyra-light hover:border-sokyra-gold/50 hover:text-sokyra-gold transition-colors"
+                            data-master-id="{{ master.id }}"
+                            data-service-id="{{ service.id }}"
+                            data-service-name="{{ service.name }}">
+                        <i class="{{ service.icon }} text-sokyra-gold/70 group-hover:text-sokyra-gold" style="font-size:10px"></i> {{ service.name }}
+                    </button>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <p class="text-sokyra-muted text-xs mt-2 font-medium">Спеціалізується на:</p>
+                <div class="flex flex-wrap gap-2 mt-1">
+                    {% for specialty in master.specialties.all|slice:":5" %}
+                    <a href="?style={{ specialty.name|urlencode }}" class="text-xs px-2.5 py-1 rounded-full bg-sokyra-gold/10 border border-sokyra-gold/20 text-sokyra-gold font-medium hover:bg-sokyra-gold hover:text-sokyra-dark transition-colors whitespace-nowrap cursor-pointer">
+                        {{ specialty.name }}
+                    </a>
+                    {% endfor %}
+                    {% with spec_count=master.specialties.all|length %}{% if spec_count > 5 %}<span class="text-xs text-sokyra-muted flex items-center">+ще</span>{% endif %}{% endwith %}
+                </div>
+                <p class="text-sokyra-muted text-sm mt-3 flex items-center gap-2"><i class="fas fa-map-marker-alt text-sokyra-gold/80"></i> {{ master.location }}</p>
+
+                {% if master.default_price %}<p class="text-sokyra-gold text-sm font-medium mt-1">Від {{ master.default_price }} грн</p>{% endif %}
+                <div class="mt-3 flex gap-2">
+                    {% if master.gallery_photos.all %}
+                    <a href="{% url 'master_detail' master.id %}#portfolio" class="text-sokyra-gold/90 hover:text-sokyra-gold text-sm font-medium flex items-center gap-1">
+                        <i class="fas fa-images"></i> Портфоліо ({{ master.gallery_photos.all|length }})
+                    </a>
+                    {% endif %}
+                    <a href="#" class="flex-1 inline-flex justify-center items-center py-2.5 rounded-xl font-semibold btn-sokyra js-booking-open" data-master-id="{{ master.id }}">
+                        Записатись
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full rounded-xl bg-sokyra-card border border-sokyra-border p-12 text-center" data-aos="fade-up">
+            <i class="fas fa-search text-4xl text-sokyra-muted mb-4"></i>
+            <p class="text-sokyra-muted">Майстрів не знайдено. Спробуйте іншу зачіску або місто.</p>
+            <a href="{% url 'find_master' %}" class="btn-outline-sokyra inline-flex items-center gap-2 px-6 py-3 rounded-lg mt-4">Усі майстри</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const selects = document.querySelectorAll('.custom-select');
+    selects.forEach(select => {
+        const btn = select.querySelector('button');
+        const menu = select.querySelector('.dropdown-menu');
+        const hiddenInput = document.getElementById(select.dataset.target);
+        const selectedText = select.querySelector('.selected-text');
+        const options = select.querySelectorAll('.select-option');
+
+        // Initial setup
+        if (hiddenInput.value) {
+            const activeOpt = Array.from(options).find(o => o.dataset.value == hiddenInput.value);
+            if (activeOpt) {
+                selectedText.textContent = activeOpt.dataset.label || activeOpt.textContent.trim();
+            }
+        }
+
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('.dropdown-menu').forEach(m => {
+                if(m !== menu) {
+                    m.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                    m.classList.add('opacity-0', 'invisible', 'translate-y-[-10px]');
+                }
+            });
+            menu.classList.toggle('opacity-0');
+            menu.classList.toggle('invisible');
+            menu.classList.toggle('translate-y-[-10px]');
+            menu.classList.toggle('opacity-100');
+            menu.classList.toggle('visible');
+            menu.classList.toggle('translate-y-0');
+        });
+
+        options.forEach(opt => {
+            opt.addEventListener('click', () => {
+                hiddenInput.value = opt.dataset.value;
+                selectedText.textContent = opt.dataset.label || opt.textContent.trim();
+                menu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                menu.classList.add('opacity-0', 'invisible', 'translate-y-[-10px]');
+            });
+        });
+    });
+
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.dropdown-menu').forEach(m => {
+            m.classList.remove('opacity-100', 'visible', 'translate-y-0');
+            m.classList.add('opacity-0', 'invisible', 'translate-y-[-10px]');
+        });
+    });
+});
+</script>
+{% endblock %}

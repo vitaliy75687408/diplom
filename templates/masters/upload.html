@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .drop-zone { transition: all 0.3s ease; }
+    .drop-zone:hover, .drop-zone.dragover { transform: scale(1.01); box-shadow: 0 0 40px rgba(139, 92, 246, 0.25); }
+    .drop-zone.pulse-hover { animation: pulseBorder 1.5s ease-in-out infinite; }
+    @keyframes pulseBorder { 0%, 100% { border-color: rgba(139, 92, 246, 0.4); } 50% { border-color: rgba(139, 92, 246, 0.7); } }
+    .scanning-dot { animation: scanningDot 1.2s ease-in-out infinite; }
+    @keyframes scanningDot { 0%, 100% { opacity: 0.4; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-[80vh] flex flex-col items-center justify-center px-4 py-12 sm:py-16">
+    <div class="w-full max-w-2xl mx-auto">
+        <!-- Headline -->
+        <div class="text-center mb-10" data-aos="fade-up">
+            <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">AI аналіз обличчя</h1>
+            <p class="text-slate-600">Завантажте фото — ми визначимо форму обличчя та підберемо стрижки та майстрів</p>
+        </div>
+
+        <form method="post" action="{% url 'analyze_barber' %}" enctype="multipart/form-data" class="space-y-8" id="uploadForm">
+            {% csrf_token %}
+            {% if error %}
+            <div class="rounded-xl bg-red-500/10 border border-red-500/30 text-red-700 px-4 py-3 text-sm" data-aos="fade-up" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <!-- Drag & Drop zone -->
+            <div data-aos="fade-up" class="relative">
+                <input type="file" name="photo" id="photoInput" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" required>
+                <div id="dropZone" class="drop-zone pulse-hover rounded-2xl border-2 border-dashed border-slate-300 bg-white border border-slate-200 p-12 sm:p-16 text-center cursor-pointer hover:border-brand-500/50 hover:bg-slate-50">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="w-20 h-20 rounded-2xl bg-brand-500/20 flex items-center justify-center text-brand-400 text-4xl">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div>
+                            <p class="text-slate-900 font-medium text-lg">Перетягніть фото сюди</p>
+                            <p class="text-slate-400 text-sm mt-1">або натисніть для вибору файлу</p>
+                        </div>
+                        <p class="text-slate-500 text-xs">PNG, JPG до 10 МБ</p>
+                    </div>
+                </div>
+                <!-- Preview (hidden by default, shown when file selected) -->
+                <div id="previewArea" class="hidden mt-4 rounded-2xl overflow-hidden bg-white/[0.03] border border-white/10 border border-white/10">
+                    <img id="previewImg" src="" alt="Preview" class="w-full h-64 object-cover">
+                    <p class="text-slate-600 text-sm p-3 text-center">Обрано: <span id="fileName" class="text-slate-900 font-medium"></span></p>
+                </div>
+            </div>
+
+            <!-- Scanning placeholder (styled, can be toggled via JS on submit) -->
+            <div id="scanningPlaceholder" class="hidden rounded-2xl bg-white/[0.03] border border-white/10 border border-white/10 p-10 text-center" data-aos="fade-up">
+                <div class="inline-flex gap-1 mb-4">
+                    <span class="w-2 h-2 rounded-full bg-neon-blue scanning-dot"></span>
+                    <span class="w-2 h-2 rounded-full bg-brand-600 scanning-dot" style="animation-delay: 0.2s"></span>
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 scanning-dot" style="animation-delay: 0.4s"></span>
+                </div>
+                <p class="text-slate-900 font-medium">Сканування...</p>
+                <p class="text-slate-400 text-sm mt-1">AI аналізує форму обличчя</p>
+            </div>
+
+            <!-- Analyze button: large, glowing -->
+            <div class="text-center" data-aos="fade-up">
+                <button type="submit" id="analyzeBtn" class="btn-primary w-full sm:w-auto inline-flex items-center justify-center gap-3 px-10 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
+                    <i class="fas fa-magic"></i>
+                    <span>Аналізувати</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    var input = document.getElementById('photoInput');
+    var dropZone = document.getElementById('dropZone');
+    var previewArea = document.getElementById('previewArea');
+    var previewImg = document.getElementById('previewImg');
+    var fileName = document.getElementById('fileName');
+    var form = document.getElementById('uploadForm');
+    var scanningPlaceholder = document.getElementById('scanningPlaceholder');
+    var analyzeBtn = document.getElementById('analyzeBtn');
+
+    if (!input || !dropZone) return;
+
+    function showPreview(file) {
+        if (!file || !file.type.startsWith('image/')) return;
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            fileName.textContent = file.name;
+            previewArea.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    dropZone.addEventListener('click', function(e) { if (e.target === dropZone || dropZone.contains(e.target)) input.click(); });
+    dropZone.addEventListener('dragover', function(e) { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', function() { dropZone.classList.remove('dragover'); });
+    dropZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length) { input.files = e.dataTransfer.files; showPreview(e.dataTransfer.files[0]); }
+    });
+    input.addEventListener('change', function() { if (this.files.length) showPreview(this.files[0]); });
+
+    form.addEventListener('submit', function() {
+        analyzeBtn.disabled = true;
+        scanningPlaceholder.classList.remove('hidden');
+    });
+})();
+</script>
+{% endblock %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="user_photo" accept="image/*" required>
+    <button type="submit">Аналізувати моє обличчя</button>
+</form>

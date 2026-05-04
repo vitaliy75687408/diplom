@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+    <div class="text-center mb-10" data-aos="fade-up">
+        <h1 class="section-title text-3xl sm:text-4xl text-white mb-2">Генерація зачіски на вашому фото</h1>
+        <p class="text-sokyra-muted text-lg">Завантажте фото та оберіть критерії — AI створить варіант із новою зачіскою</p>
+    </div>
+
+    {% if error %}
+    <div class="rounded-xl bg-red-900/20 border border-red-500/50 text-red-200 px-4 py-3 mb-6" data-aos="fade-up">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <div class="rounded-xl bg-sokyra-card border border-sokyra-border p-6 sm:p-8" data-aos="fade-up">
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            <div>
+                <label class="block text-white font-medium mb-2">Ваше фото *</label>
+                <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" required
+                    class="w-full px-4 py-3 rounded-xl border border-sokyra-border bg-sokyra-dark text-sokyra-light file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-sokyra-gold file:text-sokyra-dark file:font-semibold">
+                <p class="text-sokyra-muted text-sm mt-1">JPG або PNG. Обличчя добре видиме, анфас.</p>
+                <p class="text-sokyra-gold/80 flex items-start gap-1.5 text-xs mt-2.5 bg-sokyra-gold/10 p-2 rounded-lg">
+                    <i class="fas fa-shield-alt mt-0.5"></i>
+                    <span>Ваші фото не зберігаються на сервері та використовуються лише для створення образу.</span>
+                </p>
+            </div>
+            <div class="relative custom-select" data-target="exactStyleInput">
+                <label class="block text-white font-medium mb-2">Конкретна зачіска</label>
+                <input type="hidden" name="exact_style" id="exactStyleInput" value="{{ exact_style|default:'' }}" required>
+                <button type="button" class="w-full flex items-center justify-between px-4 rounded-xl border border-white/20 bg-white/5 text-[#E0E0E0] focus:outline-none focus:border-sokyra-gold focus:shadow-[0_0_0_1px_#c9a227] transition-all h-14 font-medium text-left">
+                    <span class="truncate selected-text text-[#888888]">-- Оберіть зачіску --</span>
+                    <i class="fas fa-chevron-down text-xs text-sokyra-muted ml-2"></i>
+                </button>
+                <div class="absolute z-50 left-0 right-0 top-full mt-2 rounded-xl border border-white/10 bg-[#141414] shadow-2xl opacity-0 invisible translate-y-[-10px] transition-all duration-200 dropdown-menu max-h-60 overflow-y-auto" style="scrollbar-width: thin;">
+                    <div class="p-2 space-y-1">
+                        <div class="px-3 py-2 text-[10px] font-bold text-[#888888] uppercase tracking-widest mt-2 mb-1 sticky top-0 bg-[#141414] shadow-[0_4px_6px_-2px_rgba(0,0,0,0.5)] z-20">Чоловічі зачіски</div>
+                        {% for hs in men_hairstyles %}
+                        <div class="select-option px-3 py-2 rounded-lg text-[#E0E0E0] hover:bg-[#e5e5e5] hover:text-sokyra-darker transition-colors cursor-pointer text-sm font-semibold" data-value="{{ hs }}" data-label="{{ hs }}">{{ hs }}</div>
+                        {% endfor %}
+                        
+                        <div class="px-3 py-2 text-[10px] font-bold text-[#888888] uppercase tracking-widest mt-4 mb-1 sticky top-0 bg-[#141414] shadow-[0_4px_6px_-2px_rgba(0,0,0,0.5)] z-20">Жіночі зачіски</div>
+                        {% for hs in women_hairstyles %}
+                        <div class="select-option px-3 py-2 rounded-lg text-[#E0E0E0] hover:bg-[#e5e5e5] hover:text-sokyra-darker transition-colors cursor-pointer text-sm font-semibold" data-value="{{ hs }}" data-label="{{ hs }}">{{ hs }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Block -->
+            <div id="hairstylePreviewBlock" class="hidden rounded-xl border border-sokyra-border bg-sokyra-darker/50 p-4 flex flex-col items-center transition-all duration-300">
+                <p class="text-sokyra-gold/90 text-sm font-semibold mb-3 w-full text-left uppercase tracking-wider text-[10px]">Обрана зачіска:</p>
+                <img id="hairstylePreviewImg" src="" alt="Preview" class="w-full h-48 object-cover object-top rounded-lg mb-3 shadow-md border border-white/10">
+                <p id="hairstylePreviewDesc" class="text-sokyra-muted text-sm text-center leading-relaxed"></p>
+            </div>
+
+            <button type="submit" class="btn-sokyra w-full py-4 rounded-xl font-semibold text-sokyra-dark flex items-center justify-center gap-2">
+                <i class="fas fa-wand-magic-sparkles"></i> Згенерувати зачіску
+            </button>
+        </form>
+        <p class="text-sokyra-muted text-sm mt-4 text-center">Обробка може зайняти 10–30 секунд.</p>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script id="hairstyleData" type="application/json">
+    {{ hairstyle_data_json|safe }}
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const selects = document.querySelectorAll('.custom-select');
+    selects.forEach(select => {
+        const btn = select.querySelector('button');
+        const menu = select.querySelector('.dropdown-menu');
+        const hiddenInput = document.getElementById(select.dataset.target);
+        const selectedText = select.querySelector('.selected-text');
+        const options = select.querySelectorAll('.select-option');
+
+        const hairstyleDataEl = document.getElementById('hairstyleData');
+        let hairstyleData = {};
+        if (hairstyleDataEl && hairstyleDataEl.textContent.trim()) {
+            try {
+                hairstyleData = JSON.parse(hairstyleDataEl.textContent);
+            } catch (e) {
+                console.error("Error parsing hairstyle data", e);
+            }
+        }
+        
+        const previewBlock = document.getElementById('hairstylePreviewBlock');
+        const previewImg = document.getElementById('hairstylePreviewImg');
+        const previewDesc = document.getElementById('hairstylePreviewDesc');
+
+        function updatePreview(val) {
+            if (hairstyleData[val]) {
+                if (hairstyleData[val].image) {
+                    previewImg.src = hairstyleData[val].image;
+                    previewImg.classList.remove('hidden');
+                } else {
+                    previewImg.classList.add('hidden');
+                }
+                previewDesc.textContent = hairstyleData[val].description || '';
+                previewBlock.classList.remove('hidden');
+            } else {
+                previewBlock.classList.add('hidden');
+            }
+        }
+
+        // Restore visual state if input has value
+        if (hiddenInput.value) {
+            const activeOpt = Array.from(options).find(o => o.dataset.value == hiddenInput.value);
+            if (activeOpt) {
+                selectedText.textContent = activeOpt.dataset.label || activeOpt.textContent.trim();
+                selectedText.classList.remove('text-[#888888]');
+                selectedText.classList.add('text-[#E0E0E0]');
+                updatePreview(hiddenInput.value);
+            }
+        }
+
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('.dropdown-menu').forEach(m => {
+                if(m !== menu) {
+                    m.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                    m.classList.add('opacity-0', 'invisible', 'translate-y-[-10px]');
+                }
+            });
+            menu.classList.toggle('opacity-0');
+            menu.classList.toggle('invisible');
+            menu.classList.toggle('translate-y-[-10px]');
+            menu.classList.toggle('opacity-100');
+            menu.classList.toggle('visible');
+            menu.classList.toggle('translate-y-0');
+        });
+
+        options.forEach(opt => {
+            opt.addEventListener('click', () => {
+                const val = opt.dataset.value;
+                hiddenInput.value = val;
+                selectedText.textContent = opt.dataset.label || opt.textContent.trim();
+                selectedText.classList.remove('text-[#888888]');
+                selectedText.classList.add('text-[#E0E0E0]');
+                menu.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                menu.classList.add('opacity-0', 'invisible', 'translate-y-[-10px]');
+                
+                updatePreview(val);
+            });
+        });
+    });
+
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.dropdown-menu').forEach(m => {
+            m.classList.remove('opacity-100', 'visible', 'translate-y-0');
+            m.classList.add('opacity-0', 'invisible', 'translate-y-[-10px]');
+        });
+    });
+
+    // Handle required hidden input
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const exactStyle = document.getElementById('exactStyleInput');
+            if (exactStyle && !exactStyle.value) {
+                e.preventDefault();
+                alert('Будь ласка, оберіть зачіску зі списку.');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

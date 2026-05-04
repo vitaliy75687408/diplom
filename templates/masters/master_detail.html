@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12">
+        <div class="lg:col-span-1" data-aos="fade-up">
+            <div class="rounded-xl overflow-hidden bg-sokyra-card border border-sokyra-border">
+                {% if master.photo %}
+                <img src="{{ master.photo.url }}" alt="{{ master.full_name }}" class="w-full aspect-[3/4] object-cover">
+                {% else %}
+                <div class="w-full aspect-[3/4] bg-sokyra-darker flex flex-col items-center justify-center text-sokyra-gold/70 rounded-xl border border-sokyra-border">
+                    <span class="text-6xl font-bold tracking-wider">{{ master.first_name|slice:":1" }}{{ master.last_name|slice:":1" }}</span>
+                    <span class="text-sokyra-muted text-sm mt-2">Фото майстра додасться пізніше</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="lg:col-span-2" data-aos="fade-up" data-aos-delay="50">
+            <div class="flex items-center gap-3 mb-2">
+                <h1 class="section-title text-3xl sm:text-4xl text-white mb-0">{{ master.full_name }}</h1>
+                {% if master.level == 'top' %}
+                <span class="px-3 py-1 rounded-lg bg-sokyra-gold/20 border border-sokyra-gold/40 text-sokyra-gold text-xs uppercase font-bold tracking-wider flex items-center gap-1">
+                    <i class="fas fa-crown"></i> ТОП МАЙСТЕР
+                </span>
+                {% endif %}
+            </div>
+            <p class="text-sokyra-muted mb-4">{{ master.get_profession_display }} · {{ master.experience_years }} років досвіду</p>
+            <div class="flex items-center gap-2 text-sokyra-gold mb-4">
+                <i class="fas fa-star"></i>
+                <span class="text-white font-semibold">{{ master.rating }}</span>
+            </div>
+            <p class="text-sokyra-muted flex items-center gap-2 mb-6"><i class="fas fa-map-marker-alt text-sokyra-gold/80"></i> {{ master.location }}</p>
+
+            {% if master.services.all %}
+            <div class="mb-8">
+                <h3 class="text-sm font-semibold text-sokyra-muted uppercase tracking-wider mb-3">Послуги</h3>
+                <div class="flex flex-wrap gap-2">
+                    {% for service in master.services.all %}
+                    <button type="button" 
+                            class="js-booking-open inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-sokyra-dark border border-sokyra-border text-sokyra-light text-sm hover:border-sokyra-gold/50 hover:text-sokyra-gold transition-colors"
+                            data-master-id="{{ master.id }}"
+                            data-service-id="{{ service.id }}"
+                            data-service-name="{{ service.name }}">
+                        <i class="{{ service.icon }} text-sokyra-gold"></i> {{ service.name }}
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="mb-8">
+                <h3 class="text-sm font-semibold text-sokyra-muted uppercase tracking-wider mb-3">Прив’язка до послуг</h3>
+                <p class="text-sokyra-muted text-sm mb-2">Цей майстер надає такі послуги (типи стрижок):</p>
+                <div class="flex flex-wrap gap-2">
+                    {% for specialty in master.specialties.all %}
+                    <span class="px-4 py-2 rounded-xl bg-sokyra-gold/20 border border-sokyra-border text-sokyra-gold text-sm">{{ specialty.name }}</span>
+                    {% empty %}
+                    <span class="text-sokyra-muted text-sm">Послуги не вказані</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% if master.default_price %}<p class="text-sokyra-gold font-semibold mb-4">Від {{ master.default_price }} грн</p>{% endif %}
+            <a href="#" class="btn-sokyra inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold js-booking-open" data-master-id="{{ master.id }}">Записатись</a>
+        </div>
+    </div>
+
+    <div id="portfolio" class="mt-16 pt-12 border-t border-sokyra-border scroll-mt-8" data-aos="fade-up">
+        <h2 class="section-title text-2xl text-white mb-6">Портфоліо майстра</h2>
+        {% if master.gallery_photos.exists %}
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {% for photo in master.gallery_photos.all %}
+            <div class="rounded-xl overflow-hidden bg-sokyra-card border border-sokyra-border aspect-square">
+                <img src="{{ photo.image.url }}" alt="{{ photo.caption|default:master.full_name }}" class="w-full h-full object-cover" loading="lazy">
+                {% if photo.caption %}<p class="p-2 text-sokyra-muted text-sm truncate">{{ photo.caption }}</p>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="rounded-xl bg-sokyra-card border border-sokyra-border p-8 text-center">
+            <p class="text-sokyra-muted mb-1">Портфоліо поки порожнє.</p>
+            <p class="text-sokyra-muted/80 text-sm">Фото робіт можна додати в <a href="{% url 'admin:masters_masterphoto_changelist' %}" class="text-sokyra-gold hover:underline">адмін-панелі</a> (Майстри → Фото майстра).</p>
+        </div>
+ {% comment %} Роботи майстра з’являться тут пізніше.</p> {% endcomment %}
+        {% endif %}
+    </div>
+
+    <div class="mt-16 pt-12 border-t border-sokyra-border" data-aos="fade-up">
+        <h2 class="section-title text-2xl text-white mb-6">Відгуки</h2>
+        {% for review in reviews %}
+        <div class="rounded-xl bg-sokyra-card border border-sokyra-border p-6 mb-4">
+            <div class="flex items-center justify-between mb-3">
+                <strong class="text-white">{{ review.author_name }}</strong>
+                <div class="flex text-sokyra-gold text-sm">
+                    {% for i in "12345" %}{% if forloop.counter <= review.rating %}<i class="fas fa-star"></i>{% else %}<i class="far fa-star"></i>{% endif %}{% endfor %}
+                </div>
+            </div>
+            <p class="text-sokyra-light/90 leading-relaxed">{{ review.text }}</p>
+            <span class="text-sokyra-muted text-sm mt-2 block">{{ review.created_at|date:"d.m.Y" }}</span>
+        </div>
+        {% empty %}
+        <p class="text-sokyra-muted">Поки що немає відгуків</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

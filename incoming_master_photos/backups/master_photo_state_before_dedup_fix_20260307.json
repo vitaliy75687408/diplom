@@ -1,0 +1,282 @@
+[
+  {
+    "id": 105,
+    "first_name": "Олександр",
+    "last_name": "Коваленко",
+    "profession": "barber",
+    "photo": "masters/work_105.jpg"
+  },
+  {
+    "id": 106,
+    "first_name": "Дмитро",
+    "last_name": "Шевченко",
+    "profession": "barber",
+    "photo": "masters/work_106.jpg"
+  },
+  {
+    "id": 107,
+    "first_name": "Ігор",
+    "last_name": "Бондаренко",
+    "profession": "barber",
+    "photo": "masters/work_107.jpg"
+  },
+  {
+    "id": 108,
+    "first_name": "Богдан",
+    "last_name": "Мельник",
+    "profession": "barber",
+    "photo": "masters/work_108.jpg"
+  },
+  {
+    "id": 109,
+    "first_name": "Андрій",
+    "last_name": "Бондаренко",
+    "profession": "barber",
+    "photo": "masters/work_109.jpg"
+  },
+  {
+    "id": 110,
+    "first_name": "Сергій",
+    "last_name": "Кравцов",
+    "profession": "barber",
+    "photo": "masters/work_110.jpg"
+  },
+  {
+    "id": 111,
+    "first_name": "Роман",
+    "last_name": "Федоренко",
+    "profession": "barber",
+    "photo": "masters/work_111.jpg"
+  },
+  {
+    "id": 112,
+    "first_name": "Максим",
+    "last_name": "Ткаченко",
+    "profession": "barber",
+    "photo": "masters/work_112.jpg"
+  },
+  {
+    "id": 113,
+    "first_name": "Кирило",
+    "last_name": "Гриценко",
+    "profession": "barber",
+    "photo": "masters/work_113.jpg"
+  },
+  {
+    "id": 114,
+    "first_name": "Юрій",
+    "last_name": "Лисенко",
+    "profession": "barber",
+    "photo": "masters/work_114.jpg"
+  },
+  {
+    "id": 115,
+    "first_name": "Олег",
+    "last_name": "Сидоренко",
+    "profession": "barber",
+    "photo": "masters/work_115.jpg"
+  },
+  {
+    "id": 116,
+    "first_name": "Михайло",
+    "last_name": "Павленко",
+    "profession": "barber",
+    "photo": "masters/work_116.jpg"
+  },
+  {
+    "id": 117,
+    "first_name": "Станіслав",
+    "last_name": "Козак",
+    "profession": "barber",
+    "photo": "masters/work_117.jpg"
+  },
+  {
+    "id": 118,
+    "first_name": "Артем",
+    "last_name": "Мороз",
+    "profession": "barber",
+    "photo": "masters/work_118.jpg"
+  },
+  {
+    "id": 119,
+    "first_name": "Євген",
+    "last_name": "Захарченко",
+    "profession": "barber",
+    "photo": "masters/work_119.jpg"
+  },
+  {
+    "id": 120,
+    "first_name": "Денис",
+    "last_name": "Білоус",
+    "profession": "barber",
+    "photo": "masters/work_120.jpg"
+  },
+  {
+    "id": 121,
+    "first_name": "Назар",
+    "last_name": "Тарасенко",
+    "profession": "barber",
+    "photo": "masters/work_121.jpg"
+  },
+  {
+    "id": 122,
+    "first_name": "Вадим",
+    "last_name": "Коваль",
+    "profession": "stylist",
+    "photo": "masters/work_122.jpg"
+  },
+  {
+    "id": 123,
+    "first_name": "Марія",
+    "last_name": "Петренко",
+    "profession": "stylist",
+    "photo": "masters/work_123.jpg"
+  },
+  {
+    "id": 124,
+    "first_name": "Ілля",
+    "last_name": "Семененко",
+    "profession": "stylist",
+    "photo": "masters/work_124.jpg"
+  },
+  {
+    "id": 125,
+    "first_name": "Катерина",
+    "last_name": "Кравченко",
+    "profession": "stylist",
+    "photo": "masters/work_125.jpg"
+  },
+  {
+    "id": 126,
+    "first_name": "Анна",
+    "last_name": "Шевчук",
+    "profession": "stylist",
+    "photo": "masters/work_126.jpg"
+  },
+  {
+    "id": 127,
+    "first_name": "Владислав",
+    "last_name": "Гончаренко",
+    "profession": "barber",
+    "photo": "masters/work_127.jpg"
+  },
+  {
+    "id": 128,
+    "first_name": "Олена",
+    "last_name": "Савченко",
+    "profession": "colorist",
+    "photo": "masters/work_128.jpg"
+  },
+  {
+    "id": 129,
+    "first_name": "Наталія",
+    "last_name": "Ковальчук",
+    "profession": "colorist",
+    "photo": "masters/work_129.jpg"
+  },
+  {
+    "id": 130,
+    "first_name": "Тетяна",
+    "last_name": "Бойко",
+    "profession": "colorist",
+    "photo": "masters/work_130.jpg"
+  },
+  {
+    "id": 131,
+    "first_name": "Тарас",
+    "last_name": "Коваль",
+    "profession": "barber",
+    "photo": "masters/work_131.jpg"
+  },
+  {
+    "id": 132,
+    "first_name": "Руслан",
+    "last_name": "Мельник",
+    "profession": "barber",
+    "photo": "masters/work_132.jpg"
+  },
+  {
+    "id": 133,
+    "first_name": "Христина",
+    "last_name": "Кравченко",
+    "profession": "stylist",
+    "photo": "masters/work_133.jpg"
+  },
+  {
+    "id": 134,
+    "first_name": "Лілія",
+    "last_name": "Ткаченко",
+    "profession": "stylist",
+    "photo": "masters/work_134.jpg"
+  },
+  {
+    "id": 135,
+    "first_name": "Вікторія",
+    "last_name": "Оніщенко",
+    "profession": "colorist",
+    "photo": "masters/work_135.jpg"
+  },
+  {
+    "id": 136,
+    "first_name": "Арсен",
+    "last_name": "Лисенко",
+    "profession": "barber",
+    "photo": "masters/work_136.jpg"
+  },
+  {
+    "id": 137,
+    "first_name": "Юлія",
+    "last_name": "Савченко",
+    "profession": "stylist",
+    "photo": "masters/work_137.jpg"
+  },
+  {
+    "id": 138,
+    "first_name": "Віталій",
+    "last_name": "Павленко",
+    "profession": "barber",
+    "photo": "masters/work_138.jpg"
+  },
+  {
+    "id": 139,
+    "first_name": "Дарина",
+    "last_name": "Коваленко",
+    "profession": "stylist",
+    "photo": "masters/work_139.jpg"
+  },
+  {
+    "id": 140,
+    "first_name": "Вероніка",
+    "last_name": "Гриценко",
+    "profession": "colorist",
+    "photo": "masters/work_140.jpg"
+  },
+  {
+    "id": 141,
+    "first_name": "Ірина",
+    "last_name": "Марченко",
+    "profession": "stylist",
+    "photo": "masters/work_141.jpg"
+  },
+  {
+    "id": 142,
+    "first_name": "Ярослав",
+    "last_name": "Клименко",
+    "profession": "barber",
+    "photo": "masters/work_142.jpg"
+  },
+  {
+    "id": 143,
+    "first_name": "Софія",
+    "last_name": "Захарченко",
+    "profession": "stylist",
+    "photo": "masters/work_143.jpg"
+  },
+  {
+    "id": 144,
+    "first_name": "Павло",
+    "last_name": "Руденко",
+    "profession": "barber",
+    "photo": "masters/work_144.jpg"
+  }
+]

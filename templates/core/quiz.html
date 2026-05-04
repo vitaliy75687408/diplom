@@ -1,0 +1,136 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-12 max-w-3xl">
+
+    <!-- Progress Bar -->
+    <div class="mb-10">
+        <div class="flex justify-between text-sm font-semibold text-gray-500 mb-2">
+            <span>Крок {{ step }} з 3</span>
+            <span>Прогрес</span>
+        </div>
+        <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
+            <!-- Simple width calculation for 3 steps: 1=33%, 2=66%, 3=100% -->
+            <div class="h-full bg-indigo-600 transition-all duration-500"
+                style="width: {% if step == 1 %}33%{% elif step == 2 %}66%{% else %}100%{% endif %}"></div>
+        </div>
+    </div>
+
+    <!-- Question Card -->
+    <div class="bg-white p-10 rounded-32 shadow-xl">
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="step" value="{{ step }}">
+
+            {% if step == 1 %}
+            <h2 class="text-3xl font-bold mb-8 text-center">Який у вас тип волосся?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Option 1 -->
+                <label class="cursor-pointer group">
+                    <input type="radio" name="hair_type" value="straight" class="peer sr-only" required>
+                    <div
+                        class="border-2 border-transparent peer-checked:border-indigo-600 peer-checked:bg-slate-50 rounded-2xl p-6 text-center transition hover:bg-gray-50">
+                        <div class="text-4xl mb-4">Straight</div>
+                        <span class="font-bold text-gray-700">Пряме</span>
+                    </div>
+                </label>
+                <!-- Option 2 -->
+                <label class="cursor-pointer group">
+                    <input type="radio" name="hair_type" value="wavy" class="peer sr-only" required>
+                    <div
+                        class="border-2 border-transparent peer-checked:border-indigo-600 peer-checked:bg-slate-50 rounded-2xl p-6 text-center transition hover:bg-gray-50">
+                        <div class="text-4xl mb-4">Wavy</div>
+                        <span class="font-bold text-gray-700">Хвилясте</span>
+                    </div>
+                </label>
+                <!-- Option 3 -->
+                <label class="cursor-pointer group">
+                    <input type="radio" name="hair_type" value="curly" class="peer sr-only" required>
+                    <div
+                        class="border-2 border-transparent peer-checked:border-indigo-600 peer-checked:bg-slate-50 rounded-2xl p-6 text-center transition hover:bg-gray-50">
+                        <div class="text-4xl mb-4">Curly</div>
+                        <span class="font-bold text-gray-700">Кучеряве</span>
+                    </div>
+                </label>
+            </div>
+
+            {% elif step == 2 %}
+            <h2 class="text-3xl font-bold mb-8 text-center">Ваша форма обличчя?</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <!-- Option  -->
+                <label class="cursor-pointer group">
+                    <input type="radio" name="face_shape" value="oval" class="peer sr-only" required>
+                    <div
+                        class="border-2 border-transparent peer-checked:border-indigo-600 rounded-2xl p-6 text-center transition hover:shadow-md">
+                        <span class="font-bold text-gray-700">Овальне</span>
+                    </div>
+                </label>
+                <label class="cursor-pointer group">
+                    <input type="radio" name="face_shape" value="round" class="peer sr-only" required>
+                    <div
+                        class="border-2 border-transparent peer-checked:border-indigo-600 rounded-2xl p-6 text-center transition hover:shadow-md">
+                        <span class="font-bold text-gray-700">Кругле</span>
+                    </div>
+                </label>
+                <label class="cursor-pointer group">
+                    <input type="radio" name="face_shape" value="square" class="peer sr-only" required>
+                    <div
+                        class="border-2 border-transparent peer-checked:border-indigo-600 rounded-2xl p-6 text-center transition hover:shadow-md">
+                        <span class="font-bold text-gray-700">Квадратне</span>
+                    </div>
+                </label>
+                <label class="cursor-pointer group">
+                    <input type="radio" name="face_shape" value="heart" class="peer sr-only" required>
+                    <div
+                        class="border-2 border-transparent peer-checked:border-indigo-600 rounded-2xl p-6 text-center transition hover:shadow-md">
+                        <span class="font-bold text-gray-700">Серце</span>
+                    </div>
+                </label>
+            </div>
+
+            {% elif step == 3 %}
+            <h2 class="text-3xl font-bold mb-8 text-center">Який ваш стиль життя?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Option 1 -->
+                <label class="cursor-pointer group">
+                    <input type="radio" name="lifestyle" value="office" class="peer sr-only" required>
+                    <div
+                        class="border-2 border-transparent peer-checked:border-indigo-600 peer-checked:bg-slate-50 rounded-2xl p-6 text-center transition hover:bg-gray-50">
+                        <div class="text-4xl mb-4">💼</div>
+                        <span class="font-bold text-gray-700">Офіс / Бізнес</span>
+                        <p class="text-sm text-gray-500 mt-2">Акуратність та стиль</p>
+                    </div>
+                </label>
+                <!-- Option 2 -->
+                <label class="cursor-pointer group">
+                    <input type="radio" name="lifestyle" value="active" class="peer sr-only" required>
+                    <div
+                        class="border-2 border-transparent peer-checked:border-indigo-600 peer-checked:bg-slate-50 rounded-2xl p-6 text-center transition hover:bg-gray-50">
+                        <div class="text-4xl mb-4">🏃</div>
+                        <span class="font-bold text-gray-700">Спорт / Актив</span>
+                        <p class="text-sm text-gray-500 mt-2">Зручність перш за все</p>
+                    </div>
+                </label>
+                <!-- Option 3 -->
+                <label class="cursor-pointer group">
+                    <input type="radio" name="lifestyle" value="creative" class="peer sr-only" required>
+                    <div
+                        class="border-2 border-transparent peer-checked:border-indigo-600 peer-checked:bg-slate-50 rounded-2xl p-6 text-center transition hover:bg-gray-50">
+                        <div class="text-4xl mb-4">🎨</div>
+                        <span class="font-bold text-gray-700">Творчість</span>
+                        <p class="text-sm text-gray-500 mt-2">Експерименти та воля</p>
+                    </div>
+                </label>
+            </div>
+            {% endif %}
+
+            <div class="mt-10 flex justify-end">
+                <button type="submit"
+                    class="bg-indigo-600 text-white px-10 py-3 rounded-full font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">
+                    Далі &rarr;
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
