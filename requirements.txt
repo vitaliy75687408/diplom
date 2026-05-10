@@ -8,3 +8,4 @@ psycopg2-binary
 python-decouple
 whitenoise
 dj-database-url
+opencv-python-headless
