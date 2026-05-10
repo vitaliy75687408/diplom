@@ -9,51 +9,16 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
 import os
 from pathlib import Path
+import dj_database_url
+from decouple import config
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Завантаження змінних: спочатку з терміналу (set), потім з файлу (щоб не залежати від .env, який можуть блокувати)
-# Шукаємо config.env або env.txt у корені проєкту — їх зазвичай не блокують
-_env_files = [
-    BASE_DIR / 'config.env',
-    BASE_DIR / 'env.txt',
-    BASE_DIR / '.env',
-    BASE_DIR / 'styleai_project' / 'config.env',
-    BASE_DIR / 'styleai_project' / '.env',
-]
-for _env_path in _env_files:
-    if _env_path.exists():
-        try:
-            with open(_env_path, encoding='utf-8') as f:
-                for line in f:
-                    line = line.strip().strip('\ufeff')  # BOM
-                    if line and not line.startswith('#') and '=' in line:
-                        key, _, value = line.partition('=')
-                        key, value = key.strip(), value.strip().strip('"').strip("'")
-                        if key:
-                            os.environ.setdefault(key, value)  # set у терміналі має пріоритет
-        except Exception:
-            pass
-        break
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5(!a9pxc&ciw592351713vpz!kvi=y5p!p^r1t&cdywy+#$&v7'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
-
-# Application definition
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -69,6 +34,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -97,91 +63,38 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'styleai_project.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')
+    )
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'uk'
-
 TIME_ZONE = 'Europe/Kyiv'
-
 USE_I18N = True
-
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# OpenAI API для генерації зачіски на фото (ключ — з терміналу set, або з config.env / env.txt)
-def _read_key(env_key, env_var_name):
-    val = (os.environ.get(env_key) or '').strip()
-    if val:
-        return val
-    for _p in (BASE_DIR / 'config.env', BASE_DIR / 'env.txt', BASE_DIR / '.env', BASE_DIR / 'styleai_project' / 'config.env', BASE_DIR / 'styleai_project' / '.env'):
-        if _p.exists():
-            try:
-                with open(_p, encoding='utf-8') as _f:
-                    for _line in _f:
-                        _line = _line.strip().strip('\ufeff')
-                        if _line.startswith(env_var_name + '='):
-                            return _line.split('=', 1)[1].strip().strip('"').strip("'")
-            except Exception:
-                pass
-            break
-    return ''
-
-OPENAI_API_KEY = _read_key('OPENAI_API_KEY', 'OPENAI_API_KEY')
-# Окремий ключ саме для генерації фото (якщо в OPENAI_API_KEY у вас OpenRouter — вкажіть тут ключ з platform.openai.com)
-OPENAI_IMAGE_API_KEY = _read_key('OPENAI_IMAGE_API_KEY', 'OPENAI_IMAGE_API_KEY')
-# Модель для редагування фото (dall-e-2 або gpt-image-1, gpt-image-1.5 — залежно від доступу)
-OPENAI_IMAGE_EDIT_MODEL = os.environ.get('OPENAI_IMAGE_EDIT_MODEL', 'dall-e-2')
-OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY', '')
-GEMINI_API_KEY = _read_key('GEMINI_API_KEY', 'GEMINI_API_KEY')
+OPENAI_API_KEY = config('OPENAI_API_KEY', default='')
+OPENAI_IMAGE_API_KEY = config('OPENAI_IMAGE_API_KEY', default='')
+OPENAI_IMAGE_EDIT_MODEL = config('OPENAI_IMAGE_EDIT_MODEL', default='dall-e-2')
+GEMINI_API_KEY = config('GEMINI_API_KEY', default='')
 USE_GEMINI_FOR_IMAGES = bool(GEMINI_API_KEY)
-TELEGRAM_BOT_TOKEN = _read_key('TELEGRAM_BOT_TOKEN', 'TELEGRAM_BOT_TOKEN')
-ADMIN_TELEGRAM_CHAT_ID = _read_key('ADMIN_TELEGRAM_CHAT_ID', 'ADMIN_TELEGRAM_CHAT_ID')
-
-# Reload triggered for Gemini key update
+TELEGRAM_BOT_TOKEN = config('TELEGRAM_BOT_TOKEN', default='')
+ADMIN_TELEGRAM_CHAT_ID = config('ADMIN_TELEGRAM_CHAT_ID', default='')
