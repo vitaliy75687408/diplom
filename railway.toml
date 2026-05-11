@@ -3,8 +3,7 @@ builder = "nixpacks"
 
 [build.env]
 DJANGO_SETTINGS_MODULE = "styleai_project.settings"
-NIXPACKS_APT_PKGS = "libxcb1 libx11-6 libxext6 libxrender1 libgl1-mesa-glx libglib2.0-0"
 
 [deploy]
-startCommand = "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn styleai_project.wsgi:application --bind 0.0.0.0:$PORT"
+startCommand = "python manage.py migrate && python manage.py populate_hairstyles && python manage.py collectstatic --noinput && gunicorn styleai_project.wsgi:application --bind 0.0.0.0:$PORT"
 restartPolicyType = "on_failure"
