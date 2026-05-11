@@ -5,5 +5,5 @@ builder = "nixpacks"
 DJANGO_SETTINGS_MODULE = "styleai_project.settings"
 
 [deploy]
-startCommand = "python manage.py migrate && python manage.py populate_hairstyles && python manage.py collectstatic --noinput && gunicorn styleai_project.wsgi:application --bind 0.0.0.0:$PORT"
-restartPolicyType = "on_failure"
+startCommand = "python manage.py migrate && python manage.py populate_hairstyles && python manage.py add_10_masters && python manage.py collectstatic --noinput && gunicorn styleai_project.wsgi:application --bind 0.0.0.0:$PORT"
+restartPolicyType = "on_failure"git add railway.toml
