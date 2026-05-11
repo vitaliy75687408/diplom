@@ -9,7 +9,10 @@ import os
 from pathlib import Path
 import io
 import json
-import cv2
+try:
+    import cv2
+except ImportError:
+    cv2 = None
 import tempfile
 import urllib.request
 from PIL import Image
