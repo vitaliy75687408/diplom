@@ -1,0 +1,6 @@
+[phases.install]
+cmds = [
+  "pip install opencv-python-headless",
+  "pip install mediapipe --no-deps",
+  "pip install -r requirements.txt"
+]
