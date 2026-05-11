@@ -4,6 +4,9 @@ builder = "nixpacks"
 [build.env]
 DJANGO_SETTINGS_MODULE = "styleai_project.settings"
 
+[nixpacks]
+aptPkgs = ["libxcb1", "libx11-6", "libxext6", "libxrender1", "libgl1-mesa-glx", "libglib2.0-0"]
+
 [deploy]
 startCommand = "gunicorn styleai_project.wsgi:application --bind 0.0.0.0:$PORT"
 healthcheckPath = "/"
