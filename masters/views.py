@@ -6,7 +6,10 @@ from hairstyles.models import Hairstyle
 from styleai.constants import POPULAR_HAIRSTYLE_NAMES, HAIRSTYLE_LENGTH, HAIRSTYLE_LENGTH_LABELS
 from .utils import apply_hair_overlay
 from .telegram_bot import send_telegram_message_to_barber, send_telegram_message_to_client, send_telegram_notification_to_admin
-import cv2
+try:
+    import cv2
+except ImportError:
+    cv2 = None
 import mediapipe as mp
 import numpy as np
 from django.http import JsonResponse
