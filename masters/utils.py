@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-try:
-    import cv2
-except ImportError:
-    cv2 = None
+import cv2
 import numpy as np
 
 

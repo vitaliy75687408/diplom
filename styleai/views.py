@@ -10,10 +10,7 @@ from pathlib import Path
 import io
 import json
 try:
-    try:
     import cv2
-except ImportError:
-    cv2 = None
 except ImportError:
     cv2 = None
 import tempfile
@@ -492,10 +489,7 @@ def hairstyle_selection(request):
 
 def _detect_face_shape_cv2(image_path):
     """Fallback: Визначення форми обличчя через геометрію OpenCV (якщо MediaPipe недоступний)."""
-    try:
     import cv2
-except ImportError:
-    cv2 = None
     import numpy as np
     
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
@@ -522,10 +516,7 @@ except ImportError:
 def _detect_face_shape_mediapipe(image_path):
     """Локальне визначення форми обличчя через MediaPipe Landmarks (за можливості)."""
     try:
-        try:
-    import cv2
-except ImportError:
-    cv2 = None
+        import cv2
         import numpy as np
         import mediapipe as mp
         # Спробуємо різні варіанти імпорту, бо MediaPipe часто оновлюється
