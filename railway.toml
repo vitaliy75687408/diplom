@@ -6,6 +6,5 @@ DJANGO_SETTINGS_MODULE = "styleai_project.settings"
 NIXPACKS_APT_PKGS = "libxcb1 libx11-6 libxext6 libxrender1 libgl1-mesa-glx libglib2.0-0"
 
 [deploy]
-startCommand = "gunicorn styleai_project.wsgi:application --bind 0.0.0.0:$PORT"
-healthcheckPath = "/"
+startCommand = "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn styleai_project.wsgi:application --bind 0.0.0.0:$PORT"
 restartPolicyType = "on_failure"
