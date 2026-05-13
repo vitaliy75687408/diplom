@@ -33,12 +33,12 @@ from styleai.constants import (
 
 # Р¤РѕС‚Рѕ Р·Р°С‡С–СЃРѕРє РїС–Рґ РЅР°Р·РІСѓ вЂ” РєРѕР¶РЅР° РєР°СЂС‚РєР° Р· СЃРІРѕС—Рј Р·РѕР±СЂР°Р¶РµРЅРЅСЏРј (РџРѕРїСѓР»СЏСЂРЅС– Р·Р°С‡С–СЃРєРё РЅР° РіРѕР»РѕРІРЅС–Р№)
 STYLE_IMAGE_MAP = {
-    'Drop Fade': 'hairstyles/drop-fade.webp',
-    'Taper Fade': 'hairstyles/taper_fade.jpg',
-    'Low Fade': 'hairstyles/low_fade.jpg',
-    'Mid Fade': 'hairstyles/mid-fade.jpg',
-    'High Fade': 'hairstyles/high_fade.jpg',
-    'Skin Fade': 'hairstyles/skin-fade.jpg', 
+    'Drop Fade': 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&q=80',
+    'Taper Fade': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80',
+    'Low Fade': 'https://images.unsplash.com/photo-1531337470782-6ccc8b6a90f7?w=800&q=80',
+    'Mid Fade': 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80',
+    'High Fade': 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&q=80',
+    'Skin Fade': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&q=80', 
     'Textured Crop': 'hairstyles/textured_crop..jpg',
     'Burst Fade': 'hairstyles/burst-fade..jpg',
     'Edgar Cut': 'hairstyles/edgar_cut.jfif',
