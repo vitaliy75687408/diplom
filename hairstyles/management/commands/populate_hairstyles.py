@@ -2,7 +2,7 @@ import urllib.request
 from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
 from hairstyles.models import Hairstyle
-from styleai.views import STYLE_IMAGE_MAP, POPULAR_STYLE_DESCRIPTIONS
+from styleai.views import STYLE_IMAGE_MAP, POPULAR_STYLE_DESCRIPTIONS, HTTP_STYLE_FALLBACK_MAP
 import os
 from django.conf import settings
 
@@ -37,7 +37,15 @@ class Command(BaseCommand):
                                 hs.image.save(filename, ContentFile(content), save=False)
                                 self.stdout.write(f"Successfully copied image for {name} from {media_path}")
                         else:
-                            self.stderr.write(f"Image file not found for {name}: {media_path}")
+                            fallback_url = HTTP_STYLE_FALLBACK_MAP.get(name)
+                            if fallback_url:
+                                response = urllib.request.urlopen(fallback_url)
+                                content = response.read()
+                                filename = os.path.basename(fallback_url.split('?')[0])
+                                hs.image.save(filename, ContentFile(content), save=False)
+                                self.stdout.write(f"Local image not found for {name}; downloaded fallback image from {fallback_url}")
+                            else:
+                                self.stderr.write(f"Image file not found for {name}: {media_path}")
                 except Exception as e:
                     self.stderr.write(f"Failed to save image for {name}: {e}")
             
