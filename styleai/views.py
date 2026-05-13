@@ -32,7 +32,24 @@ from styleai.constants import (
 
 
 # Р¤РѕС‚Рѕ Р·Р°С‡С–СЃРѕРє РїС–Рґ РЅР°Р·РІСѓ вЂ” РєРѕР¶РЅР° РєР°СЂС‚РєР° Р· СЃРІРѕС—Рј Р·РѕР±СЂР°Р¶РµРЅРЅСЏРј (РџРѕРїСѓР»СЏСЂРЅС– Р·Р°С‡С–СЃРєР8 РЅР° РіРѕР»РѕРІРЅС–Р№)
-STYLE_IMAGE_MAP = {
+# Фото зачісок під назвою — це тепер локальні шляхи в media/hairstyles.
+# Щоб замінити картинки, покладіть свої файли у media/hairstyles і відредагуйте
+# styleai/style_image_map.json.
+
+def _load_style_image_map():
+    config_path = Path(__file__).resolve().parent / "style_image_map.json"
+    if not config_path.exists():
+        return {}
+    try:
+        with open(config_path, encoding="utf-8") as f:
+            data = json.load(f)
+        return {k: v for k, v in data.items() if isinstance(k, str) and isinstance(v, str)}
+    except Exception:
+        return {}
+
+STYLE_IMAGE_MAP = _load_style_image_map()
+
+HTTP_STYLE_FALLBACK_MAP = {
     'Drop Fade': 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&q=80',
     'Taper Fade': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80',
     'Low Fade': 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&q=80',
@@ -88,10 +105,11 @@ STYLE_IMAGE_MAP = {
     'Messy Bun': 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80',
     'Man Bun': 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&q=80',
     'Curtains Hairstyle': 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80',
-    'French Crop': 'https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&q=80',
-    'Bro Flow': 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80',
-
+    'French Crop': 'https://images.unsplash.com/photo-1517849845537-5658abf4ff4e?w=200&q=85',
+    'Bro Flow': 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80'
 }
+
+
 
 POPULAR_STYLE_DESCRIPTIONS = {
     'Drop Fade': 'Фейд із опущенням лінії по потилиці.',
@@ -194,12 +212,18 @@ def _style_image_url(style):
         
     name = style.name.strip()
 
-    # 1. Якщо для цієї назви є жорстко прописаний URL — беремо його.
+    # 1. Якщо для цієї назви є локальний шлях у карті — беремо його.
     rel_path = STYLE_IMAGE_MAP.get(name)
     if rel_path:
         if rel_path.startswith('http'):
             return rel_path
-        return f"{settings.MEDIA_URL}{rel_path}"
+        local_path = Path(settings.MEDIA_ROOT) / rel_path
+        if local_path.exists():
+            return f"{settings.MEDIA_URL}{rel_path}"
+        # Якщо файлу немає, залишаємо як fallback старий HTTP-URL, якщо він є.
+        fallback_url = HTTP_STYLE_FALLBACK_MAP.get(name)
+        if fallback_url:
+            return fallback_url
 
     # 2. Фото з бази даних (файл з моделі). Це fallback, якщо для назви немає карти.
     style_image = getattr(style, 'image', None)
