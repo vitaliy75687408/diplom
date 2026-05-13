@@ -34,8 +34,9 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # If DEBUG is disabled but media is served from a local URL, also allow Django to serve media.
 # This is useful for simple deployments or when the environment doesn't have a separate media server.
 if not settings.DEBUG and settings.MEDIA_URL.startswith('/') and not urlsplit(settings.MEDIA_URL).netloc:
+    media_prefix = settings.MEDIA_URL.lstrip('/')
     urlpatterns += [
-        re_path(r'^%s(?P<path>.*)$' % re.escape(settings.MEDIA_URL.lstrip('/')), serve, {'document_root': settings.MEDIA_ROOT}),
+        re_path(r'^%s(?P<path>.*)$' % re.escape(media_prefix), serve, {'document_root': settings.MEDIA_ROOT}),
     ]
 
 if settings.DEBUG:
