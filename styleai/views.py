@@ -31,36 +31,66 @@ from styleai.constants import (
 )
 
 
-# Р¤РѕС‚Рѕ Р·Р°С‡С–СЃРѕРє РїС–Рґ РЅР°Р·РІСѓ вЂ” РєРѕР¶РЅР° РєР°СЂС‚РєР° Р· СЃРІРѕС—Рј Р·РѕР±СЂР°Р¶РµРЅРЅСЏРј (РџРѕРїСѓР»СЏСЂРЅС– Р·Р°С‡С–СЃРєРё РЅР° РіРѕР»РѕРІРЅС–Р№)
+# Р¤РѕС‚Рѕ Р·Р°С‡С–СЃРѕРє РїС–Рґ РЅР°Р·РІСѓ вЂ” РєРѕР¶РЅР° РєР°СЂС‚РєР° Р· СЃРІРѕС—Рј Р·РѕР±СЂР°Р¶РµРЅРЅСЏРј (РџРѕРїСѓР»СЏСЂРЅС– Р·Р°С‡С–СЃРєР8 РЅР° РіРѕР»РѕРІРЅС–Р№)
 STYLE_IMAGE_MAP = {
     'Drop Fade': 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&q=80',
     'Taper Fade': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80',
-    'Low Fade': 'https://images.unsplash.com/photo-1531337470782-6ccc8b6a90f7?w=800&q=80',
-    'Mid Fade': 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80',
-    'High Fade': 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&q=80',
-    'Skin Fade': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&q=80', 
-    'Textured Crop': 'hairstyles/textured_crop..jpg',
-    'Burst Fade': 'hairstyles/burst-fade..jpg',
-    'Edgar Cut': 'hairstyles/edgar_cut.jfif',
-    'Slick Back': 'hairstyles/slick-back.webp',
-    'Pompadour': 'hairstyles/pompadour.jpg',
-    'Quiff': 'hairstyles/quiff.jpg',
-    'Long Wavy Hair': 'hairstyles/long_wavy_hair .jpg',
-    'Mod Cut': 'hairstyles/mod_cut.jfif',
-    'Brush Up Fade': 'hairstyles/brush-up-fade.jpg',
-    'Undercut': 'hairstyles/undercut.webp',
-    'Faux Hawk': 'hairstyles/faux-hawk.jpg',
-    'Crew Cut': 'hairstyles/crew_cut.jpg',
-    'Buzz Cut': 'hairstyles/buzz-cut.jpg',
-    'Bob': 'hairstyles/bob.jpg.',
-    'Pixie Cut': 'hairstyles/pixie-сut.webp',
-    'Каре': 'hairstyles/каре.webp',
-    'Кучерявий Боб': 'hairstyles/кучерявий-боб.webp',
-    'Піксі': 'hairstyles/піксі.webp',
-    'Їжачок': 'hairstyles/їжачок.webp',
-    'Шеггі': 'hairstyles/шеггі.jfif',
-    'Гарсон': 'hairstyles/гарсон.webp',
-    'Сесон': 'hairstyles/сесон.webp',
+    'Low Fade': 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&q=80',
+    'Mid Fade': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&q=80',
+    'High Fade': 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=800&q=80',
+    'Skin Fade': 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800&q=80',
+    'Textured Crop': 'https://images.unsplash.com/photo-1547425260-abc76f5bddf5?w=800&q=80',
+    'Burst Fade': 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80',
+    'Edgar Cut': 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80',
+    'Slick Back': 'https://images.unsplash.com/photo-1512100356354-34a1d8c5c4c2?w=800&q=80',
+    'Pompadour': 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=800&q=80',
+    'Quiff': 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=800&q=80',
+    'Long Wavy Hair': 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80',
+    'Mod Cut': 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&q=80',
+    'Brush Up Fade': 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80',
+    'Undercut': 'https://images.unsplash.com/photo-1516893843489-64efae001c1b?w=800&q=80',
+    'Faux Hawk': 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=800&q=80',
+    'Crew Cut': 'https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&q=80',
+    'Buzz Cut': 'https://images.unsplash.com/photo-1474285729863-1bcdf01ed4c7?w=800&q=80',
+    'Bob': 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80',
+    'Pixie Cut': 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&q=80',
+    'Каре': 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80',
+    'Кучерявий Боб': 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80',
+    'Піксі': 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80',
+    'Гарсон': 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&q=80',
+    'Сесон': 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80',
+    'Їжачок': 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&q=80',
+    'Шеггі': 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&q=80',
+    'Long Layered Cut': 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80',
+    'Butterfly Cut': 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80',
+    'Romance Waves': 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80',
+    'Baroque Bob': 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&q=80',
+    'Microwave Curls': 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=800&q=80',
+    'Soft Curtain Bangs': 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80',
+    'Sleek Low Pony': 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&q=80',
+    'Shaggy Lob': 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80',
+    'Bixie Cut': 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80',
+    'Cowgirl Cut': 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&q=80',
+    'Wolf Cut': 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=800&q=80',
+    'Curtain Bangs Lob': 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&q=80',
+    'French Bob': 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80',
+    'Feathered Layers': 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80',
+    'Wispy Bangs': 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&q=80',
+    'Caesar Cut': 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&q=80',
+    'Ivy League': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80',
+    'Side Part': 'https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&q=80',
+    'Hard Part': 'https://images.unsplash.com/photo-1516893843489-64efae001c1b?w=800&q=80',
+    'Disconnected Undercut': 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=800&q=80',
+    'Mohawk Fade': 'https://images.unsplash.com/photo-1512100356354-34a1d8c5c4c2?w=800&q=80',
+    'Comb Over Fade': 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=800&q=80',
+    'Mullet': 'https://images.unsplash.com/photo-1547425260-abc76f5bddf5?w=800&q=80',
+    'Shaggy Medium': 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=800&q=80',
+    'Messy Bun': 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80',
+    'Man Bun': 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&q=80',
+    'Curtains Hairstyle': 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80',
+    'French Crop': 'https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&q=80',
+    'Bro Flow': 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80',
+
 }
 
 POPULAR_STYLE_DESCRIPTIONS = {
@@ -118,6 +148,11 @@ def _homepage_generated_style_url(style):
     }
     
     style_name_lower = style.name.strip().lower()
+
+    # Якщо стилю є жорстко прописаний зовнішній URL — повертаємо його одразу.
+    if style.name in STYLE_IMAGE_MAP and STYLE_IMAGE_MAP[style.name].startswith('http'):
+        return STYLE_IMAGE_MAP[style.name]
+
     old_id = NAME_TO_ID.get(style_name_lower)
 
     candidates = []
@@ -157,30 +192,29 @@ def _style_image_url(style):
     if not style or not hasattr(style, 'name'):
         return DEFAULT_IMAGE
         
-    # 1. Фото з бази даних
+    name = style.name.strip()
+
+    # 1. Якщо для цієї назви є жорстко прописаний URL — беремо його.
+    rel_path = STYLE_IMAGE_MAP.get(name)
+    if rel_path:
+        if rel_path.startswith('http'):
+            return rel_path
+        return f"{settings.MEDIA_URL}{rel_path}"
+
+    # 2. Фото з бази даних (файл з моделі). Це fallback, якщо для назви немає карти.
     style_image = getattr(style, 'image', None)
     if style_image:
         try:
             return style_image.url
         except Exception:
             pass
-    
-    name = style.name.strip()
-    
-    # 2. Пряма карта (локальні файли)
-    rel_path = STYLE_IMAGE_MAP.get(name)
-    if rel_path:
-        if rel_path.startswith('http'):
-            return rel_path
-        # Повертаємо абсолютний шлях від кореня
-        return f"{settings.MEDIA_URL}{rel_path}"
-    
+
     # 3. Динамічний пошук за ID
     fallback = _homepage_generated_style_url(style)
     if fallback:
         return fallback
-        
-    return STYLE_IMAGE_MAP.get(name, DEFAULT_IMAGE)
+
+    return DEFAULT_IMAGE
 
 
 

@@ -20,20 +20,26 @@ class Command(BaseCommand):
                 self.stdout.write(f"Updated description for {name}")
             
             if url and not hs.image:
-                # Assume url is a relative path like 'hairstyles/filename.jpg'
-                # Convert to absolute path in media directory
-                media_path = os.path.join(settings.MEDIA_ROOT, url)
-                if os.path.exists(media_path):
-                    try:
-                        with open(media_path, 'rb') as f:
-                            content = f.read()
-                            filename = os.path.basename(url)
-                            hs.image.save(filename, ContentFile(content), save=False)
-                            self.stdout.write(f"Successfully copied image for {name} from {media_path}")
-                    except Exception as e:
-                        self.stderr.write(f"Failed to copy image for {name}: {e}")
-                else:
-                    self.stderr.write(f"Image file not found for {name}: {media_path}")
+                try:
+                    if url.startswith('http'):
+                        response = urllib.request.urlopen(url)
+                        content = response.read()
+                        filename = os.path.basename(url.split('?')[0]) or f"{name.replace(' ', '_')}.jpg"
+                        hs.image.save(filename, ContentFile(content), save=False)
+                        self.stdout.write(f"Downloaded remote image for {name} from {url}")
+                    else:
+                        # Assume url is a relative path like 'hairstyles/filename.jpg'
+                        media_path = os.path.join(settings.MEDIA_ROOT, url)
+                        if os.path.exists(media_path):
+                            with open(media_path, 'rb') as f:
+                                content = f.read()
+                                filename = os.path.basename(url)
+                                hs.image.save(filename, ContentFile(content), save=False)
+                                self.stdout.write(f"Successfully copied image for {name} from {media_path}")
+                        else:
+                            self.stderr.write(f"Image file not found for {name}: {media_path}")
+                except Exception as e:
+                    self.stderr.write(f"Failed to save image for {name}: {e}")
             
             hs.save()
             

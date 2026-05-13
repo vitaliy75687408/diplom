@@ -18,7 +18,7 @@
         {% for rec in recommendations %}
         <div class="group rounded-2xl bg-sokyra-card border border-sokyra-border overflow-hidden hover:border-sokyra-gold/60 transition-all duration-300 shadow-xl" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00">
             <div class="relative aspect-square overflow-hidden">
-                <img src="{{ rec.hairstyle.image.url|default:rec.hairstyle.remote_image_url }}" alt="{{ rec.hairstyle.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <img src="{{ rec.hairstyle.remote_image_url|default:rec.hairstyle.image.url }}" alt="{{ rec.hairstyle.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 <div class="absolute top-4 right-4 bg-sokyra-gold text-sokyra-dark px-3 py-1 rounded-lg font-bold text-sm">
                     {{ rec.confidence_score|floatformat:0 }}% збіг
                 </div>
