@@ -15,9 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve
+from urllib.parse import urlsplit
+import re
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +30,13 @@ urlpatterns = [
 
 # Serve media files (for development and simple deployments)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# If DEBUG is disabled but media is served from a local URL, also allow Django to serve media.
+# This is useful for simple deployments or when the environment doesn't have a separate media server.
+if not settings.DEBUG and settings.MEDIA_URL.startswith('/') and not urlsplit(settings.MEDIA_URL).netloc:
+    urlpatterns += [
+        re_path(r'^%s(?P<path>.*)$' % re.escape(settings.MEDIA_URL.lstrip('/')), serve, {'document_root': settings.MEDIA_ROOT}),
+    ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

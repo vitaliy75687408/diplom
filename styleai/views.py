@@ -173,7 +173,7 @@ def _style_image_url(style):
         if rel_path.startswith('http'):
             return rel_path
         # Повертаємо абсолютний шлях від кореня
-        return f"/media/{rel_path}"
+        return f"{settings.MEDIA_URL}{rel_path}"
     
     # 3. Динамічний пошук за ID
     fallback = _homepage_generated_style_url(style)
