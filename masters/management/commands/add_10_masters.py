@@ -110,19 +110,18 @@ class Command(BaseCommand):
                     master.specialties.add(style)
             if was_created:
                 self.stdout.write(self.style.SUCCESS(f'  + {master.full_name} ({master.get_profession_display()}, {master.city})'))
-            # Призначаємо локальне фото: використовуємо лише файли зі static/images, що починаються з 'work'
+            # Призначаємо локальне фото з медіа: використовуємо файли у media/masters, що починаються з 'work_'
             try:
-                static_dir = os.path.join(os.getcwd(), 'static', 'images')
+                master_media_dir = os.path.join(os.getcwd(), 'media', 'masters')
                 work_files = []
-                if os.path.isdir(static_dir):
-                    for fn in os.listdir(static_dir):
-                        if fn.lower().startswith('work') and os.path.isfile(os.path.join(static_dir, fn)):
+                if os.path.isdir(master_media_dir):
+                    for fn in os.listdir(master_media_dir):
+                        if fn.lower().startswith('work_') and os.path.isfile(os.path.join(master_media_dir, fn)):
                             work_files.append(fn)
                 if work_files:
-                    # Вибір визначений для стабільності: за хешем імені майстра
                     idx = abs(hash(master.full_name)) % len(work_files)
                     preferred = work_files[idx]
-                    photo_path = os.path.join(static_dir, preferred)
+                    photo_path = os.path.join(master_media_dir, preferred)
                     if (not master.photo) or force_photo:
                         with open(photo_path, 'rb') as f:
                             data_bytes = f.read()
@@ -130,7 +129,8 @@ class Command(BaseCommand):
                             master.photo.save(filename, ContentFile(data_bytes), save=True)
                             self.stdout.write(self.style.SUCCESS(f'  Фото призначено для {master.full_name}: {preferred}'))
                 else:
-                    # Запасний варіант: старі аватари, якщо файлів work* немає
+                    # Запасний варіант: якщо work_* файлів немає, використовуємо наявні avatar-файли
+                    avatar_dir = master_media_dir if os.path.isdir(master_media_dir) else os.path.join(os.getcwd(), 'static', 'images')
                     PHOTO_BY_FIRST = {
                         'Олександр': 'avatar_man1.png', 'Дмитро': 'avatar_man2.png', 'Ігор': 'avatar_man1.png',
                         'Віталій': 'avatar_man2.png', 'Іван': 'avatar_man1.png', 'Марія': 'avatar_woman.png',
@@ -142,7 +142,7 @@ class Command(BaseCommand):
                     preferred = PHOTO_BY_FIRST.get(master.first_name)
                     if not preferred:
                         preferred = 'avatar_man1.png' if master.profession == 'barber' else 'avatar_woman.png'
-                    photo_path = os.path.join(static_dir, preferred)
+                    photo_path = os.path.join(avatar_dir, preferred)
                     if (not master.photo) or force_photo:
                         if os.path.exists(photo_path):
                             with open(photo_path, 'rb') as f:
@@ -151,7 +151,7 @@ class Command(BaseCommand):
                                 master.photo.save(filename, ContentFile(data_bytes), save=True)
                                 self.stdout.write(self.style.SUCCESS(f'  Фото призначено для {master.full_name}: {preferred}'))
                         else:
-                            self.stdout.write(self.style.WARNING(f'  Не знайдено файл {preferred} у {static_dir}'))
+                            self.stdout.write(self.style.WARNING(f'  Не знайдено файл {preferred} у {avatar_dir}'))
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f'  Помилка при призначенні фото для {master.full_name}: {e}'))
 
