@@ -138,6 +138,13 @@ def find_master(request):
         masters = style_masters
         context_note = None
 
+    # If no masters found after all filters, fallback to showing all masters
+    if not masters.exists():
+        masters = Master.objects.prefetch_related('specialties', 'gallery_photos', 'services').all()
+        # context_note will inform user only if a specific query was used
+        if style_query or style_id_int or name_query or city_query:
+            context_note = "За цими фільтрами майстрів не знайдено — показуємо всіх доступних майстрів."
+
     context = {
         'masters': masters,
         'context_note': context_note,

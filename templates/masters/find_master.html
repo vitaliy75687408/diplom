@@ -107,10 +107,13 @@
         {% for master in masters %}
         <div data-aos="fade-up" class="rounded-xl bg-sokyra-card border border-sokyra-border overflow-hidden hover:border-sokyra-gold/40 transition-colors">
             <div class="aspect-[4/3] relative overflow-hidden bg-sokyra-darker">
+                {% comment %} Покажемо в такому порядку: основне фото майстра, перше фото з галереї, запасний аватар зі static {% endcomment %}
                 {% if master.photo %}
                 <img src="{{ master.photo.url }}" alt="{{ master.full_name }}" class="w-full h-full object-cover">
+                {% elif master.gallery_photos.all|length > 0 %}
+                <img src="{{ master.gallery_photos.all.0.image.url }}" alt="{{ master.full_name }}" class="w-full h-full object-cover">
                 {% else %}
-                <div class="w-full h-full flex items-center justify-center text-sokyra-muted"><i class="fas fa-user text-5xl"></i></div>
+                <img src="{% static 'images/avatar_man1.png' %}" alt="{{ master.full_name }}" class="w-full h-full object-cover">
                 {% endif %}
                 <div class="absolute top-3 left-3 flex flex-col gap-2">
                     <div class="px-2.5 py-1 rounded-full bg-sokyra-dark/90 border border-sokyra-border text-sokyra-gold text-sm font-semibold flex items-center gap-1">
