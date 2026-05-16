@@ -118,16 +118,29 @@ class Command(BaseCommand):
                     for fn in os.listdir(master_media_dir):
                         if fn.lower().startswith('work_') and os.path.isfile(os.path.join(master_media_dir, fn)):
                             work_files.append(fn)
-                if work_files:
+                MASTER_WORK_PHOTOS = {
+                    'Олександр Коваленко': 'work_143.jpg',
+                    'Максим Ткаченко': 'work_137.jpg',
+                    'Ігор Мельник': 'work_139.jpg',
+                    'Катерина Кравченко': 'work_132.jpg',
+                    'Дмитро Шевченко': 'work_138.jpg',
+                    'Артем Мороз': 'work_134.jpg',
+                    'Роман Федоренко': 'work_115.jpg',
+                    'Віталій Гриценко': 'work_118.jpg',
+                    'Анна Шевчук': 'work_110.jpg',
+                    'Юрій Лисенко': 'work_111.jpg',
+                    'Андрій Бондаренко': 'work_120.jpg',
+                    'Назар Тарасенко': 'work_112.jpg',
+                    'Станіслав Козак': 'work_125.jpg',
+                    'Денис Білоус': 'work_114.jpg',
+                }
+                preferred = MASTER_WORK_PHOTOS.get(master.full_name)
+                if preferred and os.path.exists(os.path.join(master_media_dir, preferred)):
+                    photo_path = os.path.join(master_media_dir, preferred)
+                elif work_files:
                     idx = abs(hash(master.full_name)) % len(work_files)
                     preferred = work_files[idx]
                     photo_path = os.path.join(master_media_dir, preferred)
-                    if (not master.photo) or force_photo:
-                        with open(photo_path, 'rb') as f:
-                            data_bytes = f.read()
-                            filename = f"{master.first_name}_{master.last_name}_{preferred}"
-                            master.photo.save(filename, ContentFile(data_bytes), save=True)
-                            self.stdout.write(self.style.SUCCESS(f'  Фото призначено для {master.full_name}: {preferred}'))
                 else:
                     # Запасний варіант: якщо work_* файлів немає, використовуємо наявні avatar-файли
                     avatar_dir = master_media_dir if os.path.isdir(master_media_dir) else os.path.join(os.getcwd(), 'static', 'images')
@@ -143,15 +156,15 @@ class Command(BaseCommand):
                     if not preferred:
                         preferred = 'avatar_man1.png' if master.profession == 'barber' else 'avatar_woman.png'
                     photo_path = os.path.join(avatar_dir, preferred)
-                    if (not master.photo) or force_photo:
-                        if os.path.exists(photo_path):
-                            with open(photo_path, 'rb') as f:
-                                data_bytes = f.read()
-                                filename = f"{master.first_name}_{master.last_name}_{preferred}"
-                                master.photo.save(filename, ContentFile(data_bytes), save=True)
-                                self.stdout.write(self.style.SUCCESS(f'  Фото призначено для {master.full_name}: {preferred}'))
-                        else:
-                            self.stdout.write(self.style.WARNING(f'  Не знайдено файл {preferred} у {avatar_dir}'))
+                if (not master.photo) or force_photo:
+                    if os.path.exists(photo_path):
+                        with open(photo_path, 'rb') as f:
+                            data_bytes = f.read()
+                            filename = f"{master.first_name}_{master.last_name}_{preferred}"
+                            master.photo.save(filename, ContentFile(data_bytes), save=True)
+                            self.stdout.write(self.style.SUCCESS(f'  Фото призначено для {master.full_name}: {preferred}'))
+                    else:
+                        self.stdout.write(self.style.WARNING(f'  Не знайдено файл {preferred} у {os.path.dirname(photo_path)}'))
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f'  Помилка при призначенні фото для {master.full_name}: {e}'))
 
