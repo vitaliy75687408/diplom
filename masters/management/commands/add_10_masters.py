@@ -10,6 +10,8 @@ from decimal import Decimal
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.core.files.base import ContentFile
+import os
 
 from hairstyles.models import Hairstyle
 from masters.models import Master
@@ -56,10 +58,12 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--replace', action='store_true', help='Видалити всіх майстрів і створити список заново (за замовчуванням лише додає нових).')
+        parser.add_argument('--force-photo', action='store_true', help='Призначити локальні фото майстрам і перезаписати існуючі фото.')
 
     @transaction.atomic
     def handle(self, *args, **options):
         replace = options.get('replace', False)
+        force_photo = options.get('force_photo', False)
         if replace:
             deleted, _ = Master.objects.all().delete()
             self.stdout.write(f'Видалено майстрів: {deleted}')
@@ -106,6 +110,33 @@ class Command(BaseCommand):
                     master.specialties.add(style)
             if was_created:
                 self.stdout.write(self.style.SUCCESS(f'  + {master.full_name} ({master.get_profession_display()}, {master.city})'))
+            # Призначаємо локальне фото за іменем або за професією
+            try:
+                static_dir = os.path.join(os.getcwd(), 'static', 'images')
+                PHOTO_BY_FIRST = {
+                    'Олександр': 'avatar_man1.png', 'Дмитро': 'avatar_man2.png', 'Ігор': 'avatar_man1.png',
+                    'Віталій': 'avatar_man2.png', 'Іван': 'avatar_man1.png', 'Марія': 'avatar_woman.png',
+                    'Тетяна': 'avatar_woman.png', 'Олена': 'avatar_woman.png', 'Андрій': 'avatar_man1.png',
+                    'Сергій': 'avatar_man1.png', 'Роман': 'avatar_man2.png', 'Максим': 'avatar_man2.png',
+                    'Вадим': 'avatar_man1.png', 'Юрій': 'avatar_man1.png', 'Олег': 'avatar_man1.png',
+                    'Михайло': 'avatar_man1.png', 'Артем': 'avatar_man2.png', 'Наталія': 'avatar_woman.png',
+                }
+                preferred = PHOTO_BY_FIRST.get(master.first_name)
+                if not preferred:
+                    if master.profession == 'barber':
+                        preferred = 'avatar_man1.png'
+                    else:
+                        preferred = 'avatar_woman.png'
+                photo_path = os.path.join(static_dir, preferred)
+                if (not master.photo) or force_photo:
+                    if os.path.exists(photo_path):
+                        with open(photo_path, 'rb') as f:
+                            data_bytes = f.read()
+                            filename = f"{master.first_name}_{master.last_name}_{preferred}"
+                            master.photo.save(filename, ContentFile(data_bytes), save=True)
+                            self.stdout.write(self.style.SUCCESS(f'  Фото призначено для {master.full_name}: {preferred}'))
+            except Exception as e:
+                self.stdout.write(self.style.ERROR(f'  Помилка при призначенні фото для {master.full_name}: {e}'))
 
         # Гарантія: під кожну популярну зачіску є хоча б один майстер
         first_master = Master.objects.order_by('id').first()
