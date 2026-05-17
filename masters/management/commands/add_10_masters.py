@@ -119,20 +119,20 @@ class Command(BaseCommand):
                         if fn.lower().startswith('work_') and os.path.isfile(os.path.join(master_media_dir, fn)):
                             work_files.append(fn)
                 MASTER_WORK_PHOTOS = {
-                    'Олександр Коваленко': 'Олександр_Коваленко_work_143.jpg',
-                    'Максим Ткаченко': 'Максим_Ткаченко_work_116.jpg',
-                    'Ігор Мельник': 'Ігор_Мельник_work_141.jpg',
-                    'Катерина Кравченко': 'Катерина_Кравченко_work_107.jpg',
-                    'Дмитро Шевченко': 'Дмитро_Шевченко_work_129.jpg',
-                    'Артем Мороз': 'Артем_Мороз_work_126.jpg',
-                    'Роман Федоренко': 'Роман_Федоренко_work_136.jpg',
-                    'Віталій Гриценко': 'Віталій_Гриценко_work_113.jpg',
-                    'Анна Шевчук': 'Анна_Шевчук_work_110.jpg',
-                    'Юрій Лисенко': 'Юрій_Лисенко_work_109.jpg',
-                    'Андрій Бондаренко': 'Андрій_Бондаренко_work_119.jpg',
-                    'Назар Тарасенко': 'Назар_Тарасенко_work_134.jpg',
-                    'Станіслав Козак': 'Станіслав_Козак_work_116.jpg',
-                    'Денис Білоус': 'Денис_Білоус_work_140.jpg',
+                    'Олександр Коваленко': 'oleksandr_kovalchuk.png',
+                    'Максим Ткаченко': 'master2.jpg',
+                    'Ігор Мельник': 'home_team_107.jpg',
+                    'Катерина Кравченко': 'avatar_woman_8xQkcdd.png',
+                    'Дмитро Шевченко': 'master3.jpg',
+                    'Артем Мороз': 'home_team_105.jpg',
+                    'Роман Федоренко': 'home_team_122.jpg',
+                    'Віталій Гриценко': 'home_team_123.jpg',
+                    'Анна Шевчук': 'home_team_130.jpg',
+                    'Юрій Лисенко': 'home_team_138.jpg',
+                    'Андрій Бондаренко': 'andriy_oliynyk.png',
+                    'Назар Тарасенко': 'andriy_tkachenko.png',
+                    'Станіслав Козак': 'denys_tkachenko.png',
+                    'Денис Білоус': 'oleksandr_oliynyk.png',
                 }
                 preferred = MASTER_WORK_PHOTOS.get(master.full_name)
                 if preferred and os.path.exists(os.path.join(master_media_dir, preferred)):
@@ -145,16 +145,18 @@ class Command(BaseCommand):
                     # Запасний варіант: якщо work_* файлів немає, використовуємо наявні avatar-файли
                     avatar_dir = master_media_dir if os.path.isdir(master_media_dir) else os.path.join(os.getcwd(), 'static', 'images')
                     PHOTO_BY_FIRST = {
-                        'Олександр': 'avatar_man1.png', 'Дмитро': 'avatar_man2.png', 'Ігор': 'avatar_man1.png',
-                        'Віталій': 'avatar_man2.png', 'Іван': 'avatar_man1.png', 'Марія': 'avatar_woman.png',
-                        'Тетяна': 'avatar_woman.png', 'Олена': 'avatar_woman.png', 'Андрій': 'avatar_man1.png',
-                        'Сергій': 'avatar_man1.png', 'Роман': 'avatar_man2.png', 'Максим': 'avatar_man2.png',
-                        'Вадим': 'avatar_man1.png', 'Юрій': 'avatar_man1.png', 'Олег': 'avatar_man1.png',
-                        'Михайло': 'avatar_man1.png', 'Артем': 'avatar_man2.png', 'Наталія': 'avatar_woman.png',
+                        'Олександр': 'oleksandr_kovalchuk.png', 'Дмитро': 'master3.jpg', 'Ігор': 'home_team_107.jpg',
+                        'Віталій': 'home_team_123.jpg', 'Марія': 'avatar_woman_8xQkcdd.png',
+                        'Тетяна': 'avatar_woman_8xQkcdd.png', 'Олена': 'avatar_woman_8xQkcdd.png',
+                        'Андрій': 'andriy_oliynyk.png', 'Катерина': 'avatar_woman_8xQkcdd.png',
+                        'Анна': 'home_team_130.jpg', 'Сергій': 'master5.jpg',
+                        'Роман': 'home_team_122.jpg', 'Максим': 'master2.jpg',
+                        'Вадим': 'work_105.jpg', 'Юрій': 'home_team_138.jpg', 'Олег': 'work_106.jpg',
+                        'Михайло': 'work_107.jpg', 'Артем': 'home_team_105.jpg', 'Наталія': 'avatar_woman_8xQkcdd.png',
                     }
                     preferred = PHOTO_BY_FIRST.get(master.first_name)
                     if not preferred:
-                        preferred = 'avatar_man1.png' if master.profession == 'barber' else 'avatar_woman.png'
+                        preferred = 'master2.jpg' if master.profession == 'barber' else 'avatar_woman_8xQkcdd.png'
                     photo_path = os.path.join(avatar_dir, preferred)
                 if (not master.photo) or force_photo:
                     if os.path.exists(photo_path):
