@@ -1,16 +1,12 @@
 """
 Management command: assign_master_photos
 Запуск: python manage.py assign_master_photos
-
-Призначає фото майстрам з папки media/masters/.
-Якщо майстра з таким іменем немає в БД — пропускає.
 """
 
 from django.core.management.base import BaseCommand
 from masters.models import Master
 
 
-# --- Маппінг: (first_name, last_name) -> назва файлу в media/masters/ ---
 PHOTO_MAP = {
     ('Олександр', 'Коваленко'):  'oleksandr_kovalchuk.png',
     ('Максим',    'Ткаченко'):   'master2.jpg',
@@ -25,7 +21,10 @@ PHOTO_MAP = {
     ('Андрій',    'Бондаренко'): 'andriy_oliynyk.png',
     ('Назар',     'Тарасенко'):  'andriy_tkachenko.png',
     ('Станіслав', 'Козак'):      'denys_tkachenko.png',
-    ('Денис',     'Білорус'):    'oleksandr_oliynyk.png',
+    ('Олександр', 'Олійник'):    'oleksandr_oliynyk.png',
+    ('Андрій',    'Олійник'):    'master5.jpg',
+    ('Андрій',    'Ткаченко'):   'work_105.jpg',
+    ('Денис',     'Ткаченко'):   'work_106.jpg',
 }
 
 
@@ -55,7 +54,7 @@ class Command(BaseCommand):
                 skipped += 1
             except Master.MultipleObjectsReturned:
                 self.stdout.write(
-                    self.style.WARNING(f'⚠️  Знайдено кілька майстрів: {first_name} {last_name} — пропускаємо')
+                    self.style.WARNING(f'⚠️  Кілька майстрів: {first_name} {last_name} — пропускаємо')
                 )
                 skipped += 1
 
