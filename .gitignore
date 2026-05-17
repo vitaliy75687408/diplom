@@ -4,7 +4,9 @@ env.txt
 __pycache__/
 *.pyc
 db.sqlite3
-media/
+media/*
+!media/masters/
+!media/masters/**
 .env
 *.env
 staticfiles/
