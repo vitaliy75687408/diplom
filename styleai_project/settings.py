@@ -102,6 +102,8 @@ if CLOUDINARY_URL:
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='').split(',')
+
 OPENAI_API_KEY = config('OPENAI_API_KEY', default='')
 OPENAI_IMAGE_API_KEY = config('OPENAI_IMAGE_API_KEY', default='')
 OPENAI_IMAGE_EDIT_MODEL = config('OPENAI_IMAGE_EDIT_MODEL', default='dall-e-2')
