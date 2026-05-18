@@ -212,7 +212,15 @@ def _style_image_url(style):
         
     name = style.name.strip()
 
-    # 1. Якщо для цієї назви є локальний шлях у карті — беремо його.
+    # 1. Спочатку — фото з БД (найактуальніше, завантажене через populate_hairstyles)
+    style_image = getattr(style, 'image', None)
+    if style_image and getattr(style_image, 'name', None):
+        try:
+            return style_image.url
+        except Exception:
+            pass
+
+    # 2. Локальний файл з карти (style_image_map.json)
     rel_path = STYLE_IMAGE_MAP.get(name)
     if rel_path:
         if rel_path.startswith('http'):
@@ -220,23 +228,16 @@ def _style_image_url(style):
         local_path = Path(settings.MEDIA_ROOT) / rel_path
         if local_path.exists():
             return f"{settings.MEDIA_URL}{rel_path}"
-        # Якщо файлу немає, залишаємо як fallback старий HTTP-URL, якщо він є.
-        fallback_url = HTTP_STYLE_FALLBACK_MAP.get(name)
-        if fallback_url:
-            return fallback_url
 
-    # 2. Фото з бази даних (файл з моделі). Це fallback, якщо для назви немає карти.
-    style_image = getattr(style, 'image', None)
-    if style_image:
-        try:
-            return style_image.url
-        except Exception:
-            pass
-
-    # 3. Динамічний пошук за ID
+    # 3. Динамічний пошук за ID (homepage_style_XX.jpg)
     fallback = _homepage_generated_style_url(style)
     if fallback:
         return fallback
+
+    # 4. HTTP fallback (Unsplash)
+    fallback_url = HTTP_STYLE_FALLBACK_MAP.get(name)
+    if fallback_url:
+        return fallback_url
 
     return DEFAULT_IMAGE
 
@@ -1326,5 +1327,4 @@ def upload_hairstyle_status(request):
         if path.exists():
             url = f'{settings.MEDIA_URL}hairstyles/custom/{filename}'
             uploaded.append({'name': name, 'url': url, 'filename': filename})
-    return JsonResponse({'uploaded': uploaded})
-
+    return JsonResponse({'uploaded': uploaded}) 
