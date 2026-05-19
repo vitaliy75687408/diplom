@@ -1003,7 +1003,7 @@ def generate_recommendations(user_photo):
     scored.sort(key=lambda item: item[1], reverse=True)
     pool_size = min(16, len(scored))
     top_pool = scored[:pool_size]
-    candidates = random.sample(top_pool, min(4, len(top_pool)))
+    candidates = random.sample(top_pool, min(2, len(top_pool)))
     random.shuffle(candidates)
 
     recommendations = []
@@ -1327,4 +1327,4 @@ def upload_hairstyle_status(request):
         if path.exists():
             url = f'{settings.MEDIA_URL}hairstyles/custom/{filename}'
             uploaded.append({'name': name, 'url': url, 'filename': filename})
-    return JsonResponse({'uploaded': uploaded}) 
+    return JsonResponse({'uploaded': uploaded})
