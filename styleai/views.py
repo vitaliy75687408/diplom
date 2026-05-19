@@ -1089,6 +1089,21 @@ def upload_photo_api(request):
     except Exception:
         pass
     
+    # Перевіряємо чи є вже рекомендації для цього фото в сесії
+    session_recs = request.session.get('last_recommendations')
+    session_gender = request.session.get('last_gender')
+    manual_gender = request.POST.get('manual_gender')
+    gender_key = manual_gender or (gender if 'gender' in dir() else '')
+    
+    if session_recs and session_gender == gender_key:
+        return JsonResponse({
+            'success': True,
+            'photo_id': user_photo.id,
+            'face_shape': getattr(user_photo.face_shape, 'name', None) if user_photo.face_shape_id else None,
+            'survey_used': bool(user_photo.survey_id),
+            'recommendations': session_recs,
+        })
+
     # Генеруємо рекомендації
     recommendations = generate_recommendations(user_photo)
     user_photo_path = getattr(user_photo.photo, 'path', None)
@@ -1133,6 +1148,9 @@ def upload_photo_api(request):
 
     face_shape_name = getattr(user_photo.face_shape, 'name', None) if user_photo.face_shape_id else None
     survey_used = bool(user_photo.survey_id)
+
+    request.session['last_recommendations'] = recs_list
+    request.session['last_gender'] = getattr(user_photo, 'predicted_gender', '') or ''
 
     return JsonResponse({
         'success': True,
