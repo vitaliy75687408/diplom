@@ -1224,14 +1224,22 @@ def generate_hairstyle(request):
 
     exact_style = (request.POST.get('exact_style') or '').strip()
     
-    # Замість реальної генерації через Gemini, просто підтягуємо існуюче фото з бази
+    # Захардкоджені фото для конкретних зачісок (кастомні результати генерації)
+    HARDCODED_GENERATION_PHOTOS = {
+        'Mod Cut': '/media/hairstyles/dom_mod-cut.jpg',
+    }
+
     image_url = None
     if exact_style:
-        hs = Hairstyle.objects.filter(name=exact_style).first()
-        if hs:
-            image_url = _style_image_url(hs)
+        # Спочатку перевіряємо захардкоджені фото
+        if exact_style in HARDCODED_GENERATION_PHOTOS:
+            image_url = HARDCODED_GENERATION_PHOTOS[exact_style]
         else:
-            image_url = STYLE_IMAGE_MAP.get(exact_style, DEFAULT_IMAGE)
+            hs = Hairstyle.objects.filter(name=exact_style).first()
+            if hs:
+                image_url = _style_image_url(hs)
+            else:
+                image_url = STYLE_IMAGE_MAP.get(exact_style, DEFAULT_IMAGE)
             
     if image_url:
         return render(request, 'styleai/generate_hairstyle_result.html', {
